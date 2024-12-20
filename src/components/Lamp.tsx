@@ -3,6 +3,7 @@ import { lamp } from '@/store/lamp';
 import { useState } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
+import { Sessions } from './Sessions';
 
 export const Lamp = observer(function Lamp() {
   const [addMode, setAddMode] = useState(false);
@@ -11,9 +12,12 @@ export const Lamp = observer(function Lamp() {
   return (
     <div>
       {lamp.exists ? (
-        <p>
-          {lamp.name}: {lamp.time}
-        </p>
+        <>
+          <p>
+            {lamp.name}: {lamp.time}
+          </p>
+          <Sessions />
+        </>
       ) : (
         <Button onClick={() => setAddMode(true)}>create lamp</Button>
       )}

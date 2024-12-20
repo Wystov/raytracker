@@ -8,6 +8,7 @@ import {
 import { app } from './index';
 import { user } from '@/store/user';
 import { lamp } from '@/store/lamp';
+import { sessions } from '@/store/sessions';
 
 export const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
@@ -20,8 +21,9 @@ export const signOutUser = () => {
   signOut(auth);
 };
 
-onAuthStateChanged(auth, (data) => {
+onAuthStateChanged(auth, async (data) => {
   user.setUser(data);
   user.setInitialized();
-  lamp.getLamp();
+  await lamp.getLamp();
+  sessions.getSessions();
 });
