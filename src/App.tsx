@@ -1,15 +1,17 @@
-import { Button } from './components/ui/button';
+import { observer } from 'mobx-react-lite';
+import { Login } from './components/Login';
+import { user } from './store/user';
 
-export const App = () => {
+export const App = observer(function App() {
   return (
-    <>
-      <Button
-        onClick={() => {
-          alert('click');
-        }}
-      >
-        Button
-      </Button>
-    </>
+    <main className="flex flex-1 flex-col items-center p-4">
+      {user.initialized ? (
+        <>
+          <Login />
+        </>
+      ) : (
+        <div>Loading...</div>
+      )}
+    </main>
   );
-};
+});
