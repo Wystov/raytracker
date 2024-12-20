@@ -7,6 +7,7 @@ import {
 } from 'firebase/auth';
 import { app } from './index';
 import { user } from '@/store/user';
+import { lamp } from '@/store/lamp';
 
 export const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
@@ -22,4 +23,5 @@ export const signOutUser = () => {
 onAuthStateChanged(auth, (data) => {
   user.setUser(data);
   user.setInitialized();
+  lamp.getLamp();
 });

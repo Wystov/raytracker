@@ -3,7 +3,6 @@ import { makeAutoObservable } from 'mobx';
 class User {
   initialized: boolean = false;
   profile = null;
-  lamp = null;
 
   constructor() {
     makeAutoObservable(this);
