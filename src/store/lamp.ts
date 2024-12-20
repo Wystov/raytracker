@@ -13,7 +13,7 @@ class Lamp {
   }
 
   setLamp(data) {
-    if (!lamp) return;
+    if (!data) return;
     this.exists = true;
     this.name = data.lampName;
     this.time = data.lampTime;
