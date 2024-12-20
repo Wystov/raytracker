@@ -1,6 +1,6 @@
 import { makeAutoObservable } from 'mobx';
 import { lamp } from './lamp';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, increment, setDoc } from 'firebase/firestore';
 import { db } from '@/services/firebase/store';
 import { user } from './user';
 
@@ -19,7 +19,6 @@ class Sessions {
   async getSessions() {
     const id = user?.profile?.uid;
     const { name } = lamp;
-    console.log(id, name);
     if (!id || !name) return;
 
     const res = (await getDoc(doc(db, 'sessions', id))).data();
@@ -37,6 +36,12 @@ class Sessions {
 
     this.list.push(session);
     await setDoc(doc(db, 'sessions', id), { [name]: this.list });
+    await setDoc(
+      doc(db, 'user', id),
+      { lampTime: increment(session.totalSessionTime) },
+      { merge: true }
+    );
+    lamp.increaseTime(session.totalSessionTime);
   }
 }
 
