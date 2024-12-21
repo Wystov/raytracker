@@ -4,23 +4,42 @@ import { Button } from '@/components/ui/button';
 import { signInWithGoogle, signOutUser } from '@/services/firebase/auth';
 import { user } from '@/store/user';
 
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from './ui/card';
+
 export const Login = observer(function Login() {
   return (
-    <div>
+    <Card className="w-72 mb-2">
       {user.profile ? (
         <>
-          <p>Welcome, {user.profile.displayName}</p>
-          <Button
-            onClick={() => {
-              signOutUser();
-            }}
-          >
-            Sign Out
-          </Button>
+          <CardHeader>
+            <CardTitle>Welcome, {user.profile.displayName}</CardTitle>
+          </CardHeader>
+          <CardFooter>
+            <Button
+              onClick={() => {
+                signOutUser();
+              }}
+            >
+              Sign Out
+            </Button>
+          </CardFooter>
         </>
       ) : (
-        <Button onClick={() => signInWithGoogle()}>Sign In</Button>
+        <>
+          <CardHeader>
+            <CardTitle>Sign in to use service</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Button onClick={() => signInWithGoogle()}>Sign In</Button>
+          </CardContent>
+        </>
       )}
-    </div>
+    </Card>
   );
 });

@@ -11,7 +11,9 @@ export const Sessions = observer(function Sessions() {
   return (
     <div>
       {!addMode ? (
-        <Button onClick={() => setAddMode(true)}>Add session</Button>
+        <Button className="mb-2" onClick={() => setAddMode(true)}>
+          Add session
+        </Button>
       ) : (
         <SessionInputForm onClose={() => setAddMode(false)} />
       )}

@@ -7,6 +7,8 @@ import { Input } from '@/components/ui/input';
 import { toHumanReadableTime } from '@/lib/human-readable-time';
 import { lamp } from '@/store/lamp';
 
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+
 export const Lamp = observer(function Lamp() {
   const [addMode, setAddMode] = useState(false);
   const [lampInputValue, setLampInputValue] = useState('');
@@ -15,13 +17,25 @@ export const Lamp = observer(function Lamp() {
     <div>
       {lamp.exists ? (
         <>
-          <p>
-            {lamp.name}: {toHumanReadableTime(lamp.time)}
-          </p>
+          <Card className="w-72 mb-2">
+            <CardHeader>
+              <CardTitle>Your lamp</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {lamp.name}: {toHumanReadableTime(lamp.time)}
+            </CardContent>
+          </Card>
           <Sessions />
         </>
       ) : (
-        <Button onClick={() => setAddMode(true)}>create lamp</Button>
+        <Card className="w-72 mb-2">
+          <CardHeader>
+            <CardTitle>No lamp</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Button onClick={() => setAddMode(true)}>create lamp</Button>
+          </CardContent>
+        </Card>
       )}
       {addMode && (
         <form
