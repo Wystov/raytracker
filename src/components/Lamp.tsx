@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 import { lamp } from '@/store/lamp';
 
-import { Sessions } from './Sessions';
+import { Sessions } from './sessions';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 

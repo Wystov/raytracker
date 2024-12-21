@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite';
 
-import { Lamp } from './components/Lamp';
+import { Lamp } from './components/lamp';
 import { Login } from './components/Login';
 import { user } from './store/user';
 
