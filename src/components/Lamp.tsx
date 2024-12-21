@@ -1,11 +1,10 @@
 import { observer } from 'mobx-react-lite';
 import { useState } from 'react';
 
+import { Sessions } from '@/components/sessions';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { lamp } from '@/store/lamp';
-
-import { Sessions } from './sessions';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
 
 export const Lamp = observer(function Lamp() {
   const [addMode, setAddMode] = useState(false);
@@ -32,7 +31,11 @@ export const Lamp = observer(function Lamp() {
             setAddMode(false);
           }}
         >
-          <Input onInput={(e) => setLampInputValue(e.target.value)} />
+          <Input
+            onInput={(e) =>
+              setLampInputValue((e.target as HTMLInputElement).value)
+            }
+          />
           <Button type="submit">+</Button>
         </form>
       )}

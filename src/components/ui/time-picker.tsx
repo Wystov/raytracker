@@ -7,8 +7,8 @@ import { Label } from '@/components/ui/label';
 import { TimePickerInput } from './time-picker-input';
 
 interface TimePickerProps {
-  date: Date | undefined;
-  setDate: (date: Date | undefined) => void;
+  date: Date;
+  setDate: (date: Date) => void;
   type: 'hh' | 'mm' | 'ss' | 'hhmm' | 'hhmmss' | 'mmss';
   hasIcon?: boolean;
 }
