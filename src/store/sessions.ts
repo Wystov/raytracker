@@ -1,5 +1,5 @@
 import { doc, getDoc, increment, setDoc } from 'firebase/firestore';
-import { makeAutoObservable, runInAction } from 'mobx';
+import { makeAutoObservable } from 'mobx';
 
 import { db } from '@/services/firebase/store';
 
