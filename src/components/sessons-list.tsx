@@ -27,14 +27,24 @@ export const SessionsList = observer(function SessionsList() {
       <TableBody>
         {sessions.list.map((session) => {
           const { dateTime } = session;
-          const date =
-            dateTime instanceof Date
-              ? dateTime.toString()
-              : dateTime.toDate().toString();
+          const date = dateTime instanceof Date ? dateTime : dateTime.toDate();
+
+          const day = date.toLocaleDateString(undefined, {
+            weekday: 'short',
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+          });
+          const time = date.toLocaleTimeString(undefined, {
+            hour12: false,
+          });
 
           return (
-            <TableRow key={date}>
-              <TableCell className="font-medium">{date}</TableCell>
+            <TableRow key={day + time}>
+              <TableCell className="font-medium">
+                <p>{day}</p>
+                <p>{time}</p>
+              </TableCell>
               <TableCell>
                 {toHumanReadableTime(session.timeInSeconds)}
               </TableCell>
