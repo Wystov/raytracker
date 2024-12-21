@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Sessions } from '@/components/sessions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { toHumanReadableTime } from '@/lib/human-readable-time';
 import { lamp } from '@/store/lamp';
 
 export const Lamp = observer(function Lamp() {
@@ -15,7 +16,7 @@ export const Lamp = observer(function Lamp() {
       {lamp.exists ? (
         <>
           <p>
-            {lamp.name}: {lamp.time}s
+            {lamp.name}: {toHumanReadableTime(lamp.time)}
           </p>
           <Sessions />
         </>

@@ -9,6 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { toHumanReadableTime } from '@/lib/human-readable-time';
 import { sessions } from '@/store/sessions';
 
 export const SessionsList = observer(function SessionsList() {
@@ -34,10 +35,12 @@ export const SessionsList = observer(function SessionsList() {
           return (
             <TableRow key={date}>
               <TableCell className="font-medium">{date}</TableCell>
-              <TableCell>{session.timeInSeconds + 's'}</TableCell>
+              <TableCell>
+                {toHumanReadableTime(session.timeInSeconds)}
+              </TableCell>
               <TableCell>{session.uses}</TableCell>
               <TableCell className="text-right">
-                {session.totalSessionTime + 's'}
+                {toHumanReadableTime(session.totalSessionTime)}
               </TableCell>
             </TableRow>
           );
