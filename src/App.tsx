@@ -6,7 +6,10 @@ import { user } from '@/store/user';
 
 export const App = observer(function App() {
   return (
-    <main className="flex flex-1 flex-col items-center p-4 max-w-fit mx-auto">
+    <main
+      className="flex flex-1 flex-col items-center p-4 max-w-fit mx-auto"
+      data-vaul-drawer-wrapper
+    >
       {user.initialized ? (
         <>
           <Login />
