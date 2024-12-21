@@ -1,13 +1,19 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
-import tseslint from 'typescript-eslint'
+import js from '@eslint/js';
+import globals from 'globals';
+import reactHooks from 'eslint-plugin-react-hooks';
+import reactRefresh from 'eslint-plugin-react-refresh';
+import tseslint from 'typescript-eslint';
+import pluginMobx from 'eslint-plugin-mobx';
+import simpleImportSort from 'eslint-plugin-simple-import-sort';
 
 export default tseslint.config(
   { ignores: ['dist'] },
   {
-    extends: [js.configs.recommended, ...tseslint.configs.recommended],
+    extends: [
+      js.configs.recommended,
+      ...tseslint.configs.recommended,
+      pluginMobx.flatConfigs.recommended,
+    ],
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
       ecmaVersion: 2020,
@@ -16,6 +22,7 @@ export default tseslint.config(
     plugins: {
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
+      'simple-import-sort': simpleImportSort,
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
@@ -23,6 +30,13 @@ export default tseslint.config(
         'warn',
         { allowConstantExport: true },
       ],
+      'simple-import-sort/imports': 'error',
+      'simple-import-sort/exports': 'error',
+      'mobx/exhaustive-make-observable': 'warn',
+      'mobx/unconditional-make-observable': 'error',
+      'mobx/missing-make-observable': 'error',
+      'mobx/missing-observer': 'warn',
+      'mobx/no-anonymous-observer': 'warn',
     },
-  },
-)
+  }
+);

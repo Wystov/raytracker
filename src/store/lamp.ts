@@ -33,7 +33,11 @@ class Lamp {
   async addLamp(name, time = 0) {
     const id = user?.profile?.uid;
     if (!id) return;
-    await setDoc(doc(db, 'user', id), { lampName: name, lampTime: time }, { merge: true });
+    await setDoc(
+      doc(db, 'user', id),
+      { lampName: name, lampTime: time },
+      { merge: true }
+    );
     this.setLamp({ name, time });
   }
 }

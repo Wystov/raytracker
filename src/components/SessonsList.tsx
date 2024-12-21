@@ -3,7 +3,6 @@ import {
   TableBody,
   TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -27,14 +26,18 @@ export const SessionsList = observer(function SessionsList() {
         {sessions.list.map((session) => {
           const { dateTime } = session;
           const date =
-            dateTime instanceof Date ? dateTime.toString() : dateTime.toDate().toString();
+            dateTime instanceof Date
+              ? dateTime.toString()
+              : dateTime.toDate().toString();
 
           return (
             <TableRow key={date}>
               <TableCell className="font-medium">{date}</TableCell>
               <TableCell>{session.timeInSeconds + 's'}</TableCell>
               <TableCell>{session.uses}</TableCell>
-              <TableCell className="text-right">{session.totalSessionTime + 's'}</TableCell>
+              <TableCell className="text-right">
+                {session.totalSessionTime + 's'}
+              </TableCell>
             </TableRow>
           );
         })}
