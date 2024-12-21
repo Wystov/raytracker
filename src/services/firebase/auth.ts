@@ -5,10 +5,12 @@ import {
   signInWithPopup,
   signOut,
 } from 'firebase/auth';
-import { app } from './index';
-import { user } from '@/store/user';
+
 import { lamp } from '@/store/lamp';
 import { sessions } from '@/store/sessions';
+import { user } from '@/store/user';
+
+import { app } from './index';
 
 export const auth = getAuth(app);
 const provider = new GoogleAuthProvider();

@@ -1,16 +1,28 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
 import { Calendar as CalendarIcon } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { TimePicker } from './ui/time-picker';
-import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Input } from './ui/input';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from '@/components/ui/form';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
 import { sessions } from '@/store/sessions';
+
+import { Input } from './ui/input';
+import { TimePicker } from './ui/time-picker';
 
 const formSchema = z.object({
   dateTime: z.date(),
@@ -20,7 +32,7 @@ const formSchema = z.object({
 
 type FormSchemaType = z.infer<typeof formSchema>;
 
-export function SessionInputForm({ onClose }: { onClose: () => void }) {
+export const SessionInputForm = observer(function SessionInputForm({ onClose }: { onClose: () => void }) {
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -47,7 +59,10 @@ export function SessionInputForm({ onClose }: { onClose: () => void }) {
 
   return (
     <Form {...form}>
-      <form className="flex flex-col gap-4 justify-center" onSubmit={form.handleSubmit(onSubmit)}>
+      <form
+        className="flex flex-col gap-4 justify-center"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
         <FormField
           control={form.control}
           name="dateTime"
@@ -65,7 +80,11 @@ export function SessionInputForm({ onClose }: { onClose: () => void }) {
                       )}
                     >
                       <CalendarIcon className="mr-2 h-4 w-4" />
-                      {field.value ? format(field.value, 'PPP HH:mm:ss') : <span>Pick a date</span>}
+                      {field.value ? (
+                        format(field.value, 'PPP HH:mm:ss')
+                      ) : (
+                        <span>Pick a date</span>
+                      )}
                     </Button>
                   </PopoverTrigger>
                 </FormControl>
@@ -77,7 +96,12 @@ export function SessionInputForm({ onClose }: { onClose: () => void }) {
                     initialFocus
                   />
                   <div className="p-3 border-t border-border">
-                    <TimePicker type="hhmm" setDate={field.onChange} date={field.value} hasIcon />
+                    <TimePicker
+                      type="hhmm"
+                      setDate={field.onChange}
+                      date={field.value}
+                      hasIcon
+                    />
                   </div>
                 </PopoverContent>
               </Popover>
@@ -91,7 +115,12 @@ export function SessionInputForm({ onClose }: { onClose: () => void }) {
             <FormItem className="flex flex-col">
               <FormLabel className="text-left">Duration per use</FormLabel>
               <FormControl>
-                <TimePicker type={'mmss'} date={field.value} setDate={field.onChange} {...field} />
+                <TimePicker
+                  type={'mmss'}
+                  date={field.value}
+                  setDate={field.onChange}
+                  {...field}
+                />
               </FormControl>
             </FormItem>
           )}
@@ -110,7 +139,9 @@ export function SessionInputForm({ onClose }: { onClose: () => void }) {
                   max="99"
                   {...field}
                   onChange={(e) =>
-                    field.onChange(e.target.value === '' ? undefined : +e.target.value)
+                    field.onChange(
+                      e.target.value === '' ? undefined : +e.target.value
+                    )
                   }
                 />
               </FormControl>
@@ -121,4 +152,4 @@ export function SessionInputForm({ onClose }: { onClose: () => void }) {
       </form>
     </Form>
   );
-}
+})

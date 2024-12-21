@@ -1,7 +1,9 @@
-import { makeAutoObservable } from 'mobx';
-import { user } from './user';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { makeAutoObservable } from 'mobx';
+
 import { db } from '@/services/firebase/store';
+
+import { user } from './user';
 
 class Lamp {
   exists = false;

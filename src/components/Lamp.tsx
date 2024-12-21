@@ -1,9 +1,11 @@
 import { observer } from 'mobx-react-lite';
-import { lamp } from '@/store/lamp';
 import { useState } from 'react';
+
+import { lamp } from '@/store/lamp';
+
+import { Sessions } from './Sessions';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
-import { Sessions } from './Sessions';
 
 export const Lamp = observer(function Lamp() {
   const [addMode, setAddMode] = useState(false);

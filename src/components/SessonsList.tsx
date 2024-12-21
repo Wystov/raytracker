@@ -1,3 +1,5 @@
+import { observer } from 'mobx-react-lite';
+
 import {
   Table,
   TableBody,
@@ -8,7 +10,6 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { sessions } from '@/store/sessions';
-import { observer } from 'mobx-react-lite';
 
 export const SessionsList = observer(function SessionsList() {
   return (

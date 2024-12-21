@@ -1,7 +1,9 @@
-import { makeAutoObservable } from 'mobx';
-import { lamp } from './lamp';
 import { doc, getDoc, increment, setDoc } from 'firebase/firestore';
+import { makeAutoObservable } from 'mobx';
+
 import { db } from '@/services/firebase/store';
+
+import { lamp } from './lamp';
 import { user } from './user';
 
 class Sessions {
