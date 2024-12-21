@@ -8,9 +8,17 @@ import { toHumanReadableTime } from '@/lib/human-readable-time';
 import { lamp } from '@/store/lamp';
 
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from './ui/drawer';
 
 export const Lamp = observer(function Lamp() {
-  const [addMode, setAddMode] = useState(false);
   const [lampInputValue, setLampInputValue] = useState('');
 
   return (
@@ -33,26 +41,47 @@ export const Lamp = observer(function Lamp() {
             <CardTitle>No lamp</CardTitle>
           </CardHeader>
           <CardContent>
-            <Button onClick={() => setAddMode(true)}>create lamp</Button>
+            <Drawer>
+              <DrawerTrigger asChild>
+                <Button>Add lamp</Button>
+              </DrawerTrigger>
+              <DrawerContent>
+                <div className="mx-auto w-full max-w-sm flex flex-col">
+                  <DrawerHeader>
+                    <DrawerTitle>Add lamp</DrawerTitle>
+                  </DrawerHeader>
+                  <form
+                    className="flex flex-col"
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      if (!lampInputValue) return;
+                      lamp.addLamp(lampInputValue);
+                    }}
+                  >
+                    <div className="px-4">
+                      <Input
+                        placeholder="Lamp name"
+                        onInput={(e) =>
+                          setLampInputValue(
+                            (e.target as HTMLInputElement).value
+                          )
+                        }
+                      />
+                    </div>
+                    <DrawerFooter>
+                      <DrawerClose asChild>
+                        <Button type="submit">Add</Button>
+                      </DrawerClose>
+                      <DrawerClose asChild>
+                        <Button variant={'outline'}>Cancel</Button>
+                      </DrawerClose>
+                    </DrawerFooter>
+                  </form>
+                </div>
+              </DrawerContent>
+            </Drawer>
           </CardContent>
         </Card>
-      )}
-      {addMode && (
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (!lampInputValue) return;
-            lamp.addLamp(lampInputValue);
-            setAddMode(false);
-          }}
-        >
-          <Input
-            onInput={(e) =>
-              setLampInputValue((e.target as HTMLInputElement).value)
-            }
-          />
-          <Button type="submit">+</Button>
-        </form>
       )}
     </div>
   );
