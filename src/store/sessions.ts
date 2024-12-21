@@ -26,6 +26,7 @@ class Sessions {
     if (!res) return;
 
     this.list = res[name];
+    console.log(res);
   }
 
   async addSession(session) {

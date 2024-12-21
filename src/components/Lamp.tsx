@@ -14,7 +14,7 @@ export const Lamp = observer(function Lamp() {
       {lamp.exists ? (
         <>
           <p>
-            {lamp.name}: {lamp.time}
+            {lamp.name}: {lamp.time}s
           </p>
           <Sessions />
         </>
