@@ -2,6 +2,7 @@ import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { makeAutoObservable } from 'mobx';
 
 import { db } from '@/services/firebase/store';
+import type { LampData } from '@/types';
 
 import { user } from './user';
 
@@ -14,14 +15,14 @@ class Lamp {
     makeAutoObservable(this);
   }
 
-  setLamp(data) {
+  setLamp(data: LampData) {
     if (!data) return;
     this.exists = true;
     this.name = data.lampName;
     this.time = data.lampTime;
   }
 
-  increaseTime(time) {
+  increaseTime(time: number) {
     this.time += time;
   }
 
@@ -29,10 +30,11 @@ class Lamp {
     const id = user?.profile?.uid;
     if (!id) return;
     const res = (await getDoc(doc(db, 'user', id))).data();
-    this.setLamp(res);
+    if (!res) return;
+    this.setLamp(res as LampData);
   }
 
-  async addLamp(name, time = 0) {
+  async addLamp(name: string, time = 0) {
     const id = user?.profile?.uid;
     if (!id) return;
     await setDoc(
@@ -40,7 +42,7 @@ class Lamp {
       { lampName: name, lampTime: time },
       { merge: true }
     );
-    this.setLamp({ name, time });
+    this.setLamp({ lampName: name, lampTime: time });
   }
 }
 

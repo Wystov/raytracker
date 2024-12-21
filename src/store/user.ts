@@ -1,8 +1,9 @@
+import { UserInfo } from 'firebase/auth';
 import { makeAutoObservable } from 'mobx';
 
 class User {
   initialized: boolean = false;
-  profile = null;
+  profile: UserInfo | null = null;
 
   constructor() {
     makeAutoObservable(this);
@@ -12,7 +13,7 @@ class User {
     this.initialized = true;
   }
 
-  setUser(user) {
+  setUser(user: UserInfo | null) {
     this.profile = user;
   }
 }

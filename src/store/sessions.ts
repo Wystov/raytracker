@@ -2,13 +2,14 @@ import { doc, getDoc, increment, setDoc } from 'firebase/firestore';
 import { makeAutoObservable } from 'mobx';
 
 import { db } from '@/services/firebase/store';
+import { SessionData } from '@/types';
 
 import { lamp } from './lamp';
 import { user } from './user';
 
 class Sessions {
   initialized: boolean = false;
-  list = [];
+  list = [] as SessionData[];
 
   constructor() {
     makeAutoObservable(this);
@@ -18,7 +19,7 @@ class Sessions {
     this.initialized = true;
   }
 
-  setList(list) {
+  setList(list: SessionData[]) {
     this.list = list;
   }
 
@@ -34,7 +35,7 @@ class Sessions {
     this.setList(res[name]);
   }
 
-  async addSession(session) {
+  async addSession(session: SessionData) {
     const id = user?.profile?.uid;
     const { name } = lamp;
 
