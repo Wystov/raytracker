@@ -1,5 +1,5 @@
 import { doc, getDoc, increment, setDoc } from 'firebase/firestore';
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, runInAction } from 'mobx';
 
 import { db } from '@/services/firebase/store';
 
@@ -18,6 +18,10 @@ class Sessions {
     this.initialized = true;
   }
 
+  setList(list) {
+    this.list = list;
+  }
+
   async getSessions() {
     const id = user?.profile?.uid;
     const { name } = lamp;
@@ -27,7 +31,7 @@ class Sessions {
 
     if (!res) return;
 
-    this.list = res[name];
+    this.setList(res[name]);
   }
 
   async addSession(session) {
