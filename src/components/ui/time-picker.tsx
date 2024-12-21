@@ -1,4 +1,5 @@
 import { Clock } from 'lucide-react';
+import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
 import { Label } from '@/components/ui/label';
@@ -12,7 +13,12 @@ interface TimePickerProps {
   hasIcon?: boolean;
 }
 
-export const TimePicker = observer(function TimePicker({ date, setDate, type, hasIcon }: TimePickerProps) {
+export const TimePicker = observer(function TimePicker({
+  date,
+  setDate,
+  type,
+  hasIcon,
+}: TimePickerProps) {
   const minuteRef = React.useRef<HTMLInputElement>(null);
   const hourRef = React.useRef<HTMLInputElement>(null);
   const secondRef = React.useRef<HTMLInputElement>(null);
@@ -70,4 +76,4 @@ export const TimePicker = observer(function TimePicker({ date, setDate, type, ha
       )}
     </div>
   );
-})
+});

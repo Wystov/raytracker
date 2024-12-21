@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
 import { Calendar as CalendarIcon } from 'lucide-react';
+import { observer } from 'mobx-react-lite';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -32,7 +33,11 @@ const formSchema = z.object({
 
 type FormSchemaType = z.infer<typeof formSchema>;
 
-export const SessionInputForm = observer(function SessionInputForm({ onClose }: { onClose: () => void }) {
+export const SessionInputForm = observer(function SessionInputForm({
+  onClose,
+}: {
+  onClose: () => void;
+}) {
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -152,4 +157,4 @@ export const SessionInputForm = observer(function SessionInputForm({ onClose }: 
       </form>
     </Form>
   );
-})
+});

@@ -1,4 +1,5 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 import { DayPicker } from 'react-day-picker';
 
@@ -68,7 +69,7 @@ const Calendar = observer(function Calendar({
       {...props}
     />
   );
-})
+});
 Calendar.displayName = 'Calendar';
 
 export { Calendar };
