@@ -17,7 +17,7 @@ export const Lamp = observer(function Lamp() {
     <div>
       {lamp.exists ? (
         <>
-          <Card className="w-72 mb-2">
+          <Card className="w-full mb-2">
             <CardHeader>
               <CardTitle>Your lamp</CardTitle>
             </CardHeader>

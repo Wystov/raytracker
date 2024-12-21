@@ -14,7 +14,7 @@ import {
 
 export const Login = observer(function Login() {
   return (
-    <Card className="w-72 mb-2">
+    <Card className="w-full mb-2">
       {user.profile ? (
         <>
           <CardHeader>
