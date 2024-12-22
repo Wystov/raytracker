@@ -22,7 +22,7 @@ export const Lamp = observer(function Lamp() {
   const [lampInputValue, setLampInputValue] = useState('');
 
   return (
-    <div>
+    <div className="w-full min-w-fit">
       {lamp.exists ? (
         <>
           <Card className="w-full mb-2">
