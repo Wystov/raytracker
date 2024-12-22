@@ -86,42 +86,42 @@ export const SessionInputForm = () => {
             render={({ field }) => (
               <FormItem className="flex flex-col px-4">
                 <FormLabel className="text-left">Date and time</FormLabel>
-                <Popover>
-                  <FormControl>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className={cn(
-                          'w-[280px] justify-start text-left font-normal',
-                          !field.value && 'text-muted-foreground'
-                        )}
-                      >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {field.value ? (
-                          format(field.value, 'PPP HH:mm:ss')
-                        ) : (
-                          <span>Pick a date</span>
-                        )}
-                      </Button>
-                    </PopoverTrigger>
-                  </FormControl>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      initialFocus
-                    />
-                    <div className="p-3 border-t border-border">
-                      <TimePicker
-                        type="hhmm"
-                        setDate={field.onChange}
-                        date={field.value}
-                        hasIcon
+                <div className="flex items-center gap-2">
+                  <CalendarIcon className="h-5 w-5" />
+                  <Popover>
+                    <FormControl>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className={cn(
+                            'w-[280px] justify-start text-left font-normal',
+                            !field.value && 'text-muted-foreground'
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, 'PPP HH:mm:ss')
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                        </Button>
+                      </PopoverTrigger>
+                    </FormControl>
+                    <PopoverContent className="w-auto p-0">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        initialFocus
                       />
-                    </div>
-                  </PopoverContent>
-                </Popover>
+                    </PopoverContent>
+                  </Popover>
+                </div>
+                <TimePicker
+                  type="hhmm"
+                  setDate={field.onChange}
+                  date={field.value}
+                  hasIcon
+                />
               </FormItem>
             )}
           />
