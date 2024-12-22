@@ -25,6 +25,11 @@ export const TimePicker = ({
 
   return (
     <div className="flex items-end gap-2">
+      {hasIcon && (
+        <div className="flex h-10 items-center">
+          <Clock className="h-5 w-5" />
+        </div>
+      )}
       {type.includes('hh') && (
         <div className="grid gap-1 text-center">
           <Label htmlFor="hours" className="text-xs">
@@ -67,11 +72,6 @@ export const TimePicker = ({
             ref={secondRef}
             onLeftFocus={() => minuteRef.current?.focus()}
           />
-        </div>
-      )}
-      {hasIcon && (
-        <div className="flex h-10 items-center">
-          <Clock className="ml-2 h-4 w-4" />
         </div>
       )}
     </div>
