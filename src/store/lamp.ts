@@ -26,6 +26,10 @@ class Lamp {
     this.time += time;
   }
 
+  decreaseTime(time: number) {
+    this.time -= time;
+  }
+
   async getLamp() {
     const id = user?.profile?.uid;
     if (!id) return;

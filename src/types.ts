@@ -6,6 +6,7 @@ export type LampData = {
 };
 
 export type SessionData = {
+  id: number;
   dateTime: Date | Timestamp;
   timeInSeconds: number;
   totalSessionTime: number;

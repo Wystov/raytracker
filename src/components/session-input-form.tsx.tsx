@@ -56,6 +56,7 @@ export const SessionInputForm = () => {
     const timeInSeconds = minutes * 60 + seconds;
     const totalSessionTime = timeInSeconds * data.uses;
     const formattedData = {
+      id: (sessions.list.at(-1)?.id ?? -1) + 1,
       dateTime: data.dateTime,
       uses: data.uses,
       timeInSeconds,

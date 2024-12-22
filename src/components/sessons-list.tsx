@@ -1,5 +1,7 @@
 import { observer } from 'mobx-react-lite';
 
+import { RemoveWithConfirmation } from '@/components/remove-with-confirmation';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Table,
   TableBody,
@@ -10,8 +12,6 @@ import {
 } from '@/components/ui/table';
 import { toHumanReadableTime } from '@/lib/human-readable-time';
 import { sessions } from '@/store/sessions';
-
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 
 export const SessionsList = observer(function SessionsList() {
   return (
@@ -32,7 +32,7 @@ export const SessionsList = observer(function SessionsList() {
             </TableHeader>
             <TableBody>
               {sessions.list.map((session) => {
-                const { dateTime } = session;
+                const { dateTime, id } = session;
                 const date =
                   dateTime instanceof Date ? dateTime : dateTime.toDate();
 
@@ -58,6 +58,9 @@ export const SessionsList = observer(function SessionsList() {
                     <TableCell>{session.uses}</TableCell>
                     <TableCell className="text-right">
                       {toHumanReadableTime(session.totalSessionTime)}
+                    </TableCell>
+                    <TableCell>
+                      <RemoveWithConfirmation id={id} />
                     </TableCell>
                   </TableRow>
                 );

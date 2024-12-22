@@ -50,6 +50,27 @@ class Sessions {
     );
     lamp.increaseTime(session.totalSessionTime);
   }
+
+  async removeSession(id: number) {
+    const uid = user?.profile?.uid;
+    const { name } = lamp;
+
+    if (!uid || !name) return;
+
+    const sessionTime =
+      this.list.find((session) => session.id === id)?.totalSessionTime ?? 0;
+
+    this.setList(this.list.filter((session) => session.id !== id));
+
+    await setDoc(doc(db, 'sessions', uid), { [name]: this.list });
+    await setDoc(
+      doc(db, 'user', uid),
+      { lampTime: increment(-sessionTime) },
+      { merge: true }
+    );
+
+    lamp.decreaseTime(sessionTime);
+  }
 }
 
 export const sessions = new Sessions();
