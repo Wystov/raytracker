@@ -2,7 +2,6 @@
 import { Trash2 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { sessions } from '@/store/sessions';
 
 import {
   AlertDialog,
@@ -17,10 +16,14 @@ import {
 } from './ui/alert-dialog';
 
 interface RemoveWithConfirmationProps {
-  id: number;
+  text: string;
+  onClick: () => void;
 }
 
-export const RemoveWithConfirmation = ({ id }: RemoveWithConfirmationProps) => {
+export const RemoveWithConfirmation = ({
+  text,
+  onClick,
+}: RemoveWithConfirmationProps) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -31,15 +34,11 @@ export const RemoveWithConfirmation = ({ id }: RemoveWithConfirmationProps) => {
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-          <AlertDialogDescription>
-            It will permanently delete this session from our servers.
-          </AlertDialogDescription>
+          <AlertDialogDescription>{text}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={() => sessions.removeSession(id)}>
-            Continue
-          </AlertDialogAction>
+          <AlertDialogAction onClick={onClick}>Continue</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

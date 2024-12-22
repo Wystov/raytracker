@@ -60,7 +60,10 @@ export const SessionsList = observer(function SessionsList() {
                       {toHumanReadableTime(session.totalSessionTime)}
                     </TableCell>
                     <TableCell>
-                      <RemoveWithConfirmation id={id} />
+                      <RemoveWithConfirmation
+                        text="It will permanently delete this session from our servers."
+                        onClick={() => sessions.removeSession(id)}
+                      />
                     </TableCell>
                   </TableRow>
                 );
