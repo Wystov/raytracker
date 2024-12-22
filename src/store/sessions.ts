@@ -1,4 +1,11 @@
-import { doc, getDoc, increment, setDoc } from 'firebase/firestore';
+import {
+  deleteField,
+  doc,
+  getDoc,
+  increment,
+  setDoc,
+  updateDoc,
+} from 'firebase/firestore';
 import { makeAutoObservable } from 'mobx';
 
 import { db } from '@/services/firebase/store';
@@ -8,15 +15,20 @@ import { lamp } from './lamp';
 import { user } from './user';
 
 class Sessions {
-  initialized: boolean = false;
   list = [] as SessionData[];
 
   constructor() {
     makeAutoObservable(this);
   }
 
-  setInitialized() {
-    this.initialized = true;
+  async reset() {
+    const id = user?.profile?.uid;
+    const { name } = lamp;
+
+    if (!id || !name) return;
+
+    await updateDoc(doc(db, 'sessions', id), { [name]: deleteField() });
+    this.setList([]);
   }
 
   setList(list: SessionData[]) {
@@ -29,8 +41,7 @@ class Sessions {
     if (!id || !name) return;
 
     const res = (await getDoc(doc(db, 'sessions', id))).data();
-
-    if (!res) return;
+    if (!res?.[name]) return;
 
     this.setList(res[name]);
   }

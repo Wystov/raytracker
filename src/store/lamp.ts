@@ -1,4 +1,10 @@
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import {
+  deleteField,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+} from 'firebase/firestore';
 import { makeAutoObservable } from 'mobx';
 
 import { db } from '@/services/firebase/store';
@@ -13,6 +19,22 @@ class Lamp {
 
   constructor() {
     makeAutoObservable(this);
+  }
+
+  async reset() {
+    const id = user?.profile?.uid;
+    const { name } = lamp;
+
+    if (!id || !name) return;
+
+    await updateDoc(doc(db, 'user', id), {
+      lampName: deleteField(),
+      lampTime: deleteField(),
+    });
+
+    this.exists = false;
+    this.name = '';
+    this.time = 0;
   }
 
   setLamp(data: LampData) {
@@ -34,7 +56,8 @@ class Lamp {
     const id = user?.profile?.uid;
     if (!id) return;
     const res = (await getDoc(doc(db, 'user', id))).data();
-    if (!res) return;
+    if (res?.lampName?.length === undefined || res?.lampTime === undefined)
+      return;
     this.setLamp(res as LampData);
   }
 

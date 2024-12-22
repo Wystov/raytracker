@@ -6,7 +6,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toHumanReadableTime } from '@/lib/human-readable-time';
 import { lamp } from '@/store/lamp';
+import { sessions } from '@/store/sessions';
 
+import { RemoveWithConfirmation } from './remove-with-confirmation';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import {
   Drawer,
@@ -30,8 +32,17 @@ export const Lamp = observer(function Lamp() {
             <CardHeader>
               <CardTitle>Your lamp</CardTitle>
             </CardHeader>
-            <CardContent>
-              {lamp.name}: {toHumanReadableTime(lamp.time)}
+            <CardContent className="flex justify-between">
+              <div className="flex items-center">
+                {lamp.name}: {toHumanReadableTime(lamp.time)}
+              </div>
+              <RemoveWithConfirmation
+                text="This will remove the lamp and all related sessions."
+                onClick={() => {
+                  sessions.reset();
+                  lamp.reset();
+                }}
+              />
             </CardContent>
           </Card>
           <Sessions />
