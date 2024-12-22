@@ -24,6 +24,7 @@ import { sessions } from '@/store/sessions';
 
 import {
   DrawerClose,
+  DrawerDescription,
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
@@ -67,6 +68,11 @@ export const SessionInputForm = () => {
     <div className="mx-auto w-full max-w-sm">
       <DrawerHeader>
         <DrawerTitle>Add new session</DrawerTitle>
+        <DrawerDescription>
+          Pick date and time of use. Uses is an amount of uses per session e.g.
+          you used your lamp for 3 spots 1 minute each. Total session time will
+          be 3 minutes.
+        </DrawerDescription>
       </DrawerHeader>
       <Form {...form}>
         <form

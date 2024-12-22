@@ -12,6 +12,7 @@ import {
   Drawer,
   DrawerClose,
   DrawerContent,
+  DrawerDescription,
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
@@ -49,6 +50,9 @@ export const Lamp = observer(function Lamp() {
                 <div className="mx-auto w-full max-w-sm flex flex-col">
                   <DrawerHeader>
                     <DrawerTitle>Add lamp</DrawerTitle>
+                    <DrawerDescription>
+                      Add a new lamp to start tracking time.
+                    </DrawerDescription>
                   </DrawerHeader>
                   <form
                     className="flex flex-col"
