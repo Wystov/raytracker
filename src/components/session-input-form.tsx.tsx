@@ -29,7 +29,7 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from './ui/drawer';
-import { Input } from './ui/input';
+import { NumberInput } from './ui/number-input';
 import { TimePicker } from './ui/time-picker';
 
 const formSchema = z.object({
@@ -149,18 +149,7 @@ export const SessionInputForm = () => {
               <FormItem className="flex flex-col px-4">
                 <FormLabel className="text-left">Uses</FormLabel>
                 <FormControl>
-                  <Input
-                    type="number"
-                    className="w-[70px] text-center"
-                    min="1"
-                    max="99"
-                    {...field}
-                    onChange={(e) =>
-                      field.onChange(
-                        e.target.value === '' ? undefined : +e.target.value
-                      )
-                    }
-                  />
+                  <NumberInput value={field.value} setValue={field.onChange} />
                 </FormControl>
               </FormItem>
             )}
