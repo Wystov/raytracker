@@ -1,7 +1,7 @@
-/* eslint-disable mobx/missing-observer */
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
 import { Calendar as CalendarIcon } from 'lucide-react';
+import { observer } from 'mobx-react-lite';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -40,13 +40,18 @@ const formSchema = z.object({
 
 type FormSchemaType = z.infer<typeof formSchema>;
 
-export const SessionInputForm = () => {
+export const SessionInputForm = observer(function SessionInputForm() {
+  const lastSession = sessions.list.at(-1);
+  const lastUseId = lastSession?.id ?? -1;
+  const lastUseCount = lastSession?.uses ?? 1;
+  const lastUseDuration = lastSession?.timeInSeconds ?? 30;
+
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       dateTime: new Date(),
-      duration: new Date(new Date().setHours(0, 0, 30, 0)),
-      uses: 1,
+      duration: new Date(new Date().setHours(0, 0, lastUseDuration, 0)),
+      uses: lastUseCount,
     },
   });
 
@@ -56,7 +61,7 @@ export const SessionInputForm = () => {
     const timeInSeconds = minutes * 60 + seconds;
     const totalSessionTime = timeInSeconds * data.uses;
     const formattedData = {
-      id: (sessions.list.at(-1)?.id ?? -1) + 1,
+      id: lastUseId + 1,
       dateTime: data.dateTime,
       uses: data.uses,
       timeInSeconds,
@@ -166,4 +171,4 @@ export const SessionInputForm = () => {
       </Form>
     </div>
   );
-};
+});
