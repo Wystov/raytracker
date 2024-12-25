@@ -82,6 +82,25 @@ class Sessions {
 
     lamp.decreaseTime(sessionTime);
   }
+
+  async editSession(data: SessionData, sessionId?: number) {
+    const uid = user?.profile?.uid;
+    const { name } = lamp;
+
+    if (!uid || !name || sessionId === undefined) return;
+
+    const oldSession = this.list.find((s) => s.id === sessionId);
+    if (!oldSession) return;
+
+    const timeDiff = data.totalSessionTime - oldSession.totalSessionTime;
+
+    this.setList(this.list.map((s) => (s.id === sessionId ? data : s)));
+
+    await setDoc(doc(db, 'sessions', uid), { [name]: this.list });
+    await updateDoc(doc(db, 'user', uid), { lampTime: increment(timeDiff) });
+
+    lamp.increaseTime(timeDiff);
+  }
 }
 
 export const sessions = new Sessions();

@@ -40,18 +40,33 @@ const formSchema = z.object({
 
 type FormSchemaType = z.infer<typeof formSchema>;
 
-export const SessionInputForm = observer(function SessionInputForm() {
-  const lastSession = sessions.list.at(-1);
-  const lastUseId = lastSession?.id ?? -1;
-  const lastUseCount = lastSession?.uses ?? 1;
-  const lastUseDuration = lastSession?.timeInSeconds ?? 30;
+interface SessionInputFormProps {
+  type: 'add' | 'edit';
+  editSessionId?: number;
+}
+
+export const SessionInputForm = observer(function SessionInputForm({
+  type,
+  editSessionId,
+}: SessionInputFormProps) {
+  const session =
+    type === 'add'
+      ? sessions.list.at(-1)
+      : sessions.list.find((s) => s.id === editSessionId);
+
+  const id = editSessionId ?? session?.id;
+  let date = type === 'add' ? new Date() : session?.dateTime;
+  if (!(date instanceof Date)) date = date?.toDate();
+
+  const uses = session?.uses ?? 1;
+  const useDuration = session?.timeInSeconds ?? 30;
 
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      dateTime: new Date(),
-      duration: new Date(new Date().setHours(0, 0, lastUseDuration, 0)),
-      uses: lastUseCount,
+      dateTime: date,
+      duration: new Date(new Date().setHours(0, 0, useDuration, 0)),
+      uses: uses,
     },
   });
 
@@ -61,19 +76,25 @@ export const SessionInputForm = observer(function SessionInputForm() {
     const timeInSeconds = minutes * 60 + seconds;
     const totalSessionTime = timeInSeconds * data.uses;
     const formattedData = {
-      id: lastUseId + 1,
+      id: id ?? -1,
       dateTime: data.dateTime,
       uses: data.uses,
       timeInSeconds,
       totalSessionTime,
     };
-    sessions.addSession(formattedData);
+    if (type === 'add') {
+      formattedData.id += 1;
+      sessions.addSession(formattedData);
+      return;
+    }
+
+    sessions.editSession(formattedData, id);
   }
 
   return (
     <div className="mx-auto w-full max-w-sm">
       <DrawerHeader>
-        <DrawerTitle>Add new session</DrawerTitle>
+        <DrawerTitle>{type === 'add' ? 'Add new' : 'Edit'} session</DrawerTitle>
         <DrawerDescription>
           Pick date and time of use. Uses is an amount of uses per session e.g.
           you used your lamp for 3 spots 1 minute each. Total session time will
@@ -161,7 +182,7 @@ export const SessionInputForm = observer(function SessionInputForm() {
           />
           <DrawerFooter>
             <DrawerClose asChild>
-              <Button type="submit">Add</Button>
+              <Button type="submit">{type === 'add' ? 'Add' : 'Edit'}</Button>
             </DrawerClose>
             <DrawerClose asChild>
               <Button variant={'outline'}>Cancel</Button>

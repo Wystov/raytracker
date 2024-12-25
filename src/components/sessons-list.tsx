@@ -13,6 +13,8 @@ import {
 import { toHumanReadableTime } from '@/lib/human-readable-time';
 import { sessions } from '@/store/sessions';
 
+import { SessionDrawer } from './session-drawer';
+
 export const SessionsList = observer(function SessionsList() {
   return (
     <Card>
@@ -60,6 +62,7 @@ export const SessionsList = observer(function SessionsList() {
                       {toHumanReadableTime(session.totalSessionTime)}
                     </TableCell>
                     <TableCell>
+                      <SessionDrawer type="edit" id={id} />
                       <RemoveWithConfirmation
                         text="It will permanently delete this session from our servers."
                         onClick={() => sessions.removeSession(id)}
