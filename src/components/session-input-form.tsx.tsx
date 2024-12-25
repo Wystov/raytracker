@@ -19,6 +19,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { toHumanReadableTime } from '@/lib/human-readable-time';
 import { cn } from '@/lib/utils';
 import { sessions } from '@/store/sessions';
 
@@ -58,23 +59,34 @@ export const SessionInputForm = observer(function SessionInputForm({
   let date = type === 'add' ? new Date() : session?.dateTime;
   if (!(date instanceof Date)) date = date?.toDate();
 
-  const uses = session?.uses ?? 1;
-  const useDuration = session?.timeInSeconds ?? 30;
+  const defaultUses = session?.uses ?? 1;
+  const defaultUseDuration = session?.timeInSeconds ?? 30;
 
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       dateTime: date,
-      duration: new Date(new Date().setHours(0, 0, useDuration, 0)),
-      uses: uses,
+      duration: new Date(new Date().setHours(0, 0, defaultUseDuration, 0)),
+      uses: defaultUses,
     },
   });
 
-  function onSubmit(data: FormSchemaType) {
-    const minutes = data.duration.getMinutes();
-    const seconds = data.duration.getSeconds();
+  const [duration, uses] = form.watch(['duration', 'uses']);
+
+  const getTotalSessionTime = (duration: Date, uses: number) => {
+    const minutes = duration.getMinutes();
+    const seconds = duration.getSeconds();
     const timeInSeconds = minutes * 60 + seconds;
-    const totalSessionTime = timeInSeconds * data.uses;
+    const totalSessionTime = timeInSeconds * uses;
+    return { timeInSeconds, totalSessionTime };
+  };
+
+  const { timeInSeconds, totalSessionTime } = getTotalSessionTime(
+    duration,
+    uses
+  );
+
+  function onSubmit(data: FormSchemaType) {
     const formattedData = {
       id: id ?? -1,
       dateTime: data.dateTime,
@@ -163,36 +175,45 @@ export const SessionInputForm = observer(function SessionInputForm({
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="duration"
-            render={({ field }) => (
-              <FormItem className="flex flex-col px-4">
-                <FormLabel className="text-left">Duration per use</FormLabel>
-                <FormControl>
-                  <TimePicker
-                    type={'mmss'}
-                    date={field.value}
-                    setDate={field.onChange}
-                    {...field}
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="uses"
-            render={({ field }) => (
-              <FormItem className="flex flex-col px-4">
-                <FormLabel className="text-left">Uses</FormLabel>
-                <FormControl>
-                  <NumberInput value={field.value} setValue={field.onChange} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <DrawerFooter className="flex-row gap-2 mb-4">
+          <div className="flex">
+            <FormField
+              control={form.control}
+              name="duration"
+              render={({ field }) => (
+                <FormItem className="flex flex-col basis-2/4 px-4">
+                  <FormLabel className="text-left">Duration per use</FormLabel>
+                  <FormControl>
+                    <TimePicker
+                      type={'mmss'}
+                      date={field.value}
+                      setDate={field.onChange}
+                      {...field}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="uses"
+              render={({ field }) => (
+                <FormItem className="flex flex-col justify-between px-4">
+                  <FormLabel className="text-left">Uses</FormLabel>
+                  <FormControl>
+                    <NumberInput
+                      value={field.value}
+                      setValue={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          </div>
+          <p className="px-4">
+            <span className="font-medium">Total session time:</span>{' '}
+            {toHumanReadableTime(totalSessionTime)}
+          </p>
+          <DrawerFooter className="flex-row gap-2 py-0 mb-12">
             <DrawerClose asChild>
               <Button variant={'outline'} className="flex-1">
                 Cancel
