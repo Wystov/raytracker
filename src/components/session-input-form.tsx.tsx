@@ -180,12 +180,16 @@ export const SessionInputForm = observer(function SessionInputForm({
               </FormItem>
             )}
           />
-          <DrawerFooter>
+          <DrawerFooter className="flex-row gap-2 mb-4">
             <DrawerClose asChild>
-              <Button type="submit">{type === 'add' ? 'Add' : 'Edit'}</Button>
+              <Button variant={'outline'} className="flex-1">
+                Cancel
+              </Button>
             </DrawerClose>
             <DrawerClose asChild>
-              <Button variant={'outline'}>Cancel</Button>
+              <Button type="submit" className="flex-1">
+                {type === 'add' ? 'Add' : 'Edit'}
+              </Button>
             </DrawerClose>
           </DrawerFooter>
         </form>
