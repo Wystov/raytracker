@@ -37,6 +37,7 @@ export const NumberInput: React.FC<NumberInputProps> = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = parseInt(e.target.value, 10);
+    if (isNaN(newValue)) return;
     setValue(Math.max(1, Math.min(newValue, 99)));
   };
 
