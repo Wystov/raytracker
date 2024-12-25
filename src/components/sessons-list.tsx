@@ -39,13 +39,14 @@ export const SessionsList = observer(function SessionsList() {
                   dateTime instanceof Date ? dateTime : dateTime.toDate();
 
                 const day = date.toLocaleDateString(undefined, {
-                  weekday: 'short',
                   year: 'numeric',
                   month: 'short',
                   day: 'numeric',
                 });
                 const time = date.toLocaleTimeString(undefined, {
                   hour12: false,
+                  hour: 'numeric',
+                  minute: 'numeric',
                 });
 
                 return (
