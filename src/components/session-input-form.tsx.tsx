@@ -125,7 +125,7 @@ export const SessionInputForm = observer(function SessionInputForm({
                           )}
                         >
                           {field.value ? (
-                            format(field.value, 'PPP HH:mm:ss')
+                            format(field.value, 'PPP')
                           ) : (
                             <span>Pick a date</span>
                           )}
@@ -136,7 +136,19 @@ export const SessionInputForm = observer(function SessionInputForm({
                       <Calendar
                         mode="single"
                         selected={field.value}
-                        onSelect={field.onChange}
+                        onSelect={(e) => {
+                          if (!e) return;
+                          const currentDateTime = field.value ?? new Date();
+
+                          const hours = currentDateTime.getHours();
+                          const minutes = currentDateTime.getMinutes();
+                          const seconds = currentDateTime.getSeconds();
+
+                          const newDate = new Date(e);
+                          newDate.setHours(hours, minutes, seconds, 0);
+
+                          field.onChange(newDate);
+                        }}
                         initialFocus
                       />
                     </PopoverContent>
