@@ -1,5 +1,4 @@
 import {
-  collection,
   deleteDoc,
   doc,
   getDocs,
@@ -9,78 +8,84 @@ import {
 } from 'firebase/firestore';
 import { makeAutoObservable } from 'mobx';
 
-import { db } from '@/services/firebase/store';
-import { SessionData } from '@/types';
+import { dbRefs } from '@/services/firebase/store';
+import { SessionData, SessionDataWithId } from '@/types';
 
 import { lamp } from './lamp';
-import { user } from './user';
 
 class Sessions {
-  list = [] as SessionData[];
+  list = [] as SessionDataWithId[];
 
   constructor() {
     makeAutoObservable(this);
   }
 
   async reset() {
-    const uid = user?.data?.profile?.uid;
-    const { id } = lamp;
+    if (!dbRefs.lampDoc) {
+      console.error('db ref for lamp doc is not set');
+      return;
+    }
 
-    if (!uid || !id) return;
-
-    await deleteDoc(doc(db, 'users', uid, 'lamps', id));
+    await deleteDoc(dbRefs.lampDoc);
 
     this.setList([]);
   }
 
-  setList(list: SessionData[]) {
+  setList(list: SessionDataWithId[]) {
     this.list = list;
   }
 
   async getSessions() {
-    const uid = user?.data?.profile?.uid;
-    const { id } = lamp;
-    if (!uid || !id) return;
+    if (!dbRefs.sessionsCollection) {
+      console.error('db ref for sessions collection is not set');
+      return;
+    }
 
-    const res = await getDocs(
-      collection(db, 'users', uid, 'lamps', id, 'sessions')
+    const res = await getDocs(dbRefs.sessionsCollection);
+
+    res.forEach((session) =>
+      this.list.push(session.data() as SessionDataWithId)
     );
-
-    res.forEach((session) => this.list.push(session.data() as SessionData));
   }
 
   async addSession(session: SessionData) {
-    const uid = user?.data?.profile?.uid;
-    const { id } = lamp;
+    if (!dbRefs.sessionsCollection || !dbRefs.lampDoc) {
+      console.error(
+        'db refs for sessions collection or lamp doc is not set',
+        'Sessions collection ref: ',
+        dbRefs.sessionsCollection,
+        'lamp doc ref: ',
+        dbRefs.lampDoc
+      );
+      return;
+    }
 
-    if (!uid || !id) return;
+    const sessionDocRef = doc(dbRefs.sessionsCollection);
 
-    const sessionsCollectionRef = collection(
-      db,
-      'users',
-      uid,
-      'lamps',
-      id,
-      'sessions'
-    );
-
-    const sessionDocRef = doc(sessionsCollectionRef);
-
-    const sessionDataWithId = { ...session, id: sessionDocRef.id };
+    const sessionDataWithId: SessionDataWithId = {
+      ...session,
+      id: sessionDocRef.id,
+    };
     await setDoc(sessionDocRef, sessionDataWithId);
-    await updateDoc(doc(db, 'users', uid, 'lamps', id), {
+    await updateDoc(dbRefs.lampDoc, {
       lampTime: increment(session.totalSessionTime),
     });
 
-    this.list.push(session);
+    this.list.push(sessionDataWithId);
     lamp.increaseTime(session.totalSessionTime);
   }
 
-  async removeSession(sessionId: number) {
-    const uid = user?.data?.profile?.uid;
-    const { id } = lamp;
-
-    if (!uid || !id) return;
+  async removeSession(sessionId: string) {
+    if (!dbRefs.sessionDoc || !dbRefs.lampDoc) {
+      console.error(
+        'db ref sessionDoc or lamp doc is not set',
+        'session doc: ',
+        dbRefs.sessionDoc?.toString(),
+        'lamp doc: ',
+        dbRefs.lampDoc
+      );
+      return;
+    }
 
     const sessionTime =
       this.list.find((session) => session.id === sessionId)?.totalSessionTime ??
@@ -88,11 +93,9 @@ class Sessions {
 
     this.setList(this.list.filter((session) => session.id !== sessionId));
 
-    await deleteDoc(
-      doc(db, 'users', uid, 'lamps', id, 'sessions', sessionId.toString())
-    );
+    await deleteDoc(dbRefs.sessionDoc(sessionId.toString()));
     await setDoc(
-      doc(db, 'users', uid, 'lamps', id),
+      dbRefs.lampDoc,
       { lampTime: increment(-sessionTime) },
       { merge: true }
     );
@@ -100,25 +103,31 @@ class Sessions {
     lamp.decreaseTime(sessionTime);
   }
 
-  async editSession(data: SessionData, sessionId?: number) {
-    const uid = user?.data?.profile?.uid;
-    const { id } = lamp;
+  async editSession(data: SessionDataWithId) {
+    if (!dbRefs.lampDoc || !dbRefs.sessionDoc) {
+      console.error(
+        'No session id or no db ref lamp doc or no db ref session doc',
+        'db ref lamp doc: ',
+        dbRefs.lampDoc,
+        'db ref session doc: ',
+        dbRefs.sessionDoc?.toString()
+      );
+      return;
+    }
 
-    if (!uid || !id || sessionId === undefined) return;
-
-    const oldSession = this.list.find((s) => s.id === sessionId);
-    if (!oldSession) return;
+    const oldSession = this.list.find((s) => s.id === data.id);
+    if (!oldSession) {
+      console.error('no old session found');
+      return;
+    }
 
     const timeDiff = data.totalSessionTime - oldSession.totalSessionTime;
 
-    await updateDoc(
-      doc(db, 'users', uid, 'lamps', id, 'sessions', sessionId.toString()),
-      data
-    );
-    await updateDoc(doc(db, 'users', uid, 'lamps', id), {
+    await updateDoc(dbRefs.sessionDoc(data.id), data);
+    await updateDoc(dbRefs.lampDoc, {
       lampTime: increment(timeDiff),
     });
-    this.setList(this.list.map((s) => (s.id === sessionId ? data : s)));
+    this.setList(this.list.map((s) => (s.id === data.id ? data : s)));
 
     lamp.increaseTime(timeDiff);
   }

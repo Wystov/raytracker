@@ -1,7 +1,7 @@
-import { collection, deleteDoc, doc, getDoc, setDoc } from 'firebase/firestore';
+import { deleteDoc, doc, getDoc, setDoc } from 'firebase/firestore';
 import { makeAutoObservable } from 'mobx';
 
-import { db } from '@/services/firebase/store';
+import { dbRefs } from '@/services/firebase/store';
 import type { LampData } from '@/types';
 
 import { user } from './user';
@@ -17,13 +17,12 @@ class Lamp {
   }
 
   async reset() {
-    const uid = user?.data?.profile?.uid;
-    const { id } = lamp;
-
-    if (!uid || !id) return;
-
-    await deleteDoc(doc(db, 'users', uid, 'lamps', id));
-    user.modifyLampList(id, 'delete');
+    if (!dbRefs.lampDoc) {
+      console.error('db ref for lamp doc is not set');
+      return;
+    }
+    await deleteDoc(dbRefs.lampDoc);
+    user.modifyLampList(this.id, 'delete');
 
     this.exists = false;
     this.name = '';
@@ -31,7 +30,10 @@ class Lamp {
   }
 
   setLamp(data: LampData) {
-    if (!data) return;
+    if (!data) {
+      console.error('No lamp data passed to setLamp');
+      return;
+    }
     this.exists = true;
     this.name = data.lampName;
     this.time = data.lampTime;
@@ -47,23 +49,23 @@ class Lamp {
   }
 
   async getLamp() {
-    const id = user?.data?.profile?.uid;
+    if (!dbRefs.lampDoc) {
+      console.error('db ref for lamp doc is not set');
+      return;
+    }
 
-    const lampId = user.data?.lampList.at(-1);
-
-    if (!id || !lampId) return;
-    const res = await getDoc(doc(db, 'users', id, 'lamps', lampId));
+    const res = await getDoc(dbRefs.lampDoc);
 
     this.setLamp(res.data() as LampData);
   }
 
   async addLamp(name: string, time = 0) {
-    const uid = user?.data?.profile?.uid;
-    if (!uid) return;
+    if (!dbRefs.lampsCollection) {
+      console.error('db ref for lamps collections is not set');
+      return;
+    }
 
-    const lampsCollectionRef = collection(db, 'users', uid, 'lamps');
-
-    const lampDocRef = doc(lampsCollectionRef);
+    const lampDocRef = doc(dbRefs.lampsCollection);
 
     const lampDataWithId = {
       lampName: name,

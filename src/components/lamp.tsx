@@ -69,7 +69,10 @@ export const Lamp = observer(function Lamp() {
                     className="flex flex-col"
                     onSubmit={(e) => {
                       e.preventDefault();
-                      if (!lampInputValue) return;
+                      if (!lampInputValue) {
+                        console.error('Input is empty');
+                        return;
+                      }
                       lamp.addLamp(lampInputValue);
                     }}
                   >

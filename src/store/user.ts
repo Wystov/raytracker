@@ -2,7 +2,7 @@ import { UserInfo } from 'firebase/auth';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { makeAutoObservable } from 'mobx';
 
-import { db } from '@/services/firebase/store';
+import { db, dbRefs } from '@/services/firebase/store';
 import { UserData } from '@/types';
 
 class User {
@@ -24,6 +24,11 @@ class User {
     }
 
     const { uid, email, displayName, photoURL } = user;
+
+    if (!uid) {
+      console.error('no uid');
+      return;
+    }
 
     const userDocRef = doc(db, 'users', uid);
     const userDocSnapshot = await getDoc(userDocRef);
@@ -49,9 +54,10 @@ class User {
   }
 
   async modifyLampList(lampId: string, action: 'add' | 'delete') {
-    const uid = this.data?.profile.uid;
-
-    if (!uid) return;
+    if (!dbRefs.userDoc) {
+      console.error('db ref user doc is not set');
+      return;
+    }
 
     if (action === 'delete' && this.data !== null) {
       this.data.lampList = this.data?.lampList.filter(
@@ -61,7 +67,7 @@ class User {
       this.data?.lampList.push(lampId);
     }
 
-    await updateDoc(doc(db, 'users', uid), {
+    await updateDoc(dbRefs.userDoc, {
       lampList: this.data?.lampList,
     });
 

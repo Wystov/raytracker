@@ -11,6 +11,7 @@ import { sessions } from '@/store/sessions';
 import { user } from '@/store/user';
 
 import { app } from './index';
+import { setDbRefs } from './store';
 
 export const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
@@ -27,6 +28,12 @@ export const signOutUser = () => {
 onAuthStateChanged(auth, async (data) => {
   await user.setUser(data);
   user.setInitialized();
+  if (!data?.uid) {
+    setDbRefs({ reset: true });
+    return;
+  }
+
+  setDbRefs({ uid: data.uid, lampId: user.data?.lampList.at(-1) });
   await lamp.getLamp();
   sessions.getSessions();
 });

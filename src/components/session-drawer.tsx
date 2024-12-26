@@ -7,7 +7,7 @@ import { Drawer, DrawerContent, DrawerTrigger } from './ui/drawer';
 
 interface SessionDrawerProps {
   type: 'add' | 'edit';
-  id?: number;
+  id?: string;
 }
 export const SessionDrawer = ({ type, id }: SessionDrawerProps) => {
   return (

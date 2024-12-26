@@ -1,4 +1,8 @@
-import { Timestamp } from 'firebase/firestore';
+import {
+  CollectionReference,
+  DocumentReference,
+  Timestamp,
+} from 'firebase/firestore';
 
 export type LampData = {
   lampName: string;
@@ -7,11 +11,14 @@ export type LampData = {
 };
 
 export type SessionData = {
-  id: number;
   dateTime: Date | Timestamp;
   timeInSeconds: number;
   totalSessionTime: number;
   uses: number;
+};
+
+export type SessionDataWithId = SessionData & {
+  id: string;
 };
 
 export type UserProfile = {
@@ -24,4 +31,12 @@ export type UserProfile = {
 export type UserData = {
   profile: UserProfile;
   lampList: string[];
+};
+
+export type DBRefs = {
+  userDoc?: DocumentReference;
+  lampDoc?: DocumentReference;
+  lampsCollection?: CollectionReference;
+  sessionsCollection?: CollectionReference;
+  sessionDoc?: (sessionId: string) => DocumentReference;
 };

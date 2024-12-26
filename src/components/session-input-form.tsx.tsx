@@ -22,6 +22,7 @@ import {
 import { toHumanReadableTime } from '@/lib/human-readable-time';
 import { cn } from '@/lib/utils';
 import { sessions } from '@/store/sessions';
+import { SessionDataWithId } from '@/types';
 
 import {
   DrawerClose,
@@ -43,7 +44,7 @@ type FormSchemaType = z.infer<typeof formSchema>;
 
 interface SessionInputFormProps {
   type: 'add' | 'edit';
-  editSessionId?: number;
+  editSessionId?: string;
 }
 
 export const SessionInputForm = observer(function SessionInputForm({
@@ -55,7 +56,6 @@ export const SessionInputForm = observer(function SessionInputForm({
       ? sessions.list.at(-1)
       : sessions.list.find((s) => s.id === editSessionId);
 
-  const id = editSessionId ?? session?.id;
   let date = type === 'add' ? new Date() : session?.dateTime;
   if (!(date instanceof Date)) date = date?.toDate();
 
@@ -87,20 +87,25 @@ export const SessionInputForm = observer(function SessionInputForm({
   );
 
   function onSubmit(data: FormSchemaType) {
-    const formattedData = {
-      id: id ?? -1,
+    const formattedData: SessionDataWithId = {
       dateTime: data.dateTime,
       uses: data.uses,
       timeInSeconds,
       totalSessionTime,
+      id: '',
     };
     if (type === 'add') {
-      formattedData.id += 1;
       sessions.addSession(formattedData);
       return;
     }
 
-    sessions.editSession(formattedData, id);
+    if (!editSessionId) {
+      console.error('no session id passed for edit');
+      return;
+    }
+
+    formattedData.id = editSessionId;
+    sessions.editSession(formattedData);
   }
 
   return (
@@ -149,7 +154,10 @@ export const SessionInputForm = observer(function SessionInputForm({
                         mode="single"
                         selected={field.value}
                         onSelect={(e) => {
-                          if (!e) return;
+                          if (!e) {
+                            console.error('No selected date');
+                            return;
+                          }
                           const currentDateTime = field.value ?? new Date();
 
                           const hours = currentDateTime.getHours();
