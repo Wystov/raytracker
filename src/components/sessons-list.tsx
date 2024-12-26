@@ -15,13 +15,14 @@ import { sessions } from '@/store/sessions';
 
 import { SessionDrawer } from './session-drawer';
 
-export const SessionsList = observer(function SessionsList() {
+export const Sessions = observer(function SessionsList() {
   return (
     <Card>
       <CardHeader>
         <CardTitle>Sessions</CardTitle>
       </CardHeader>
       <CardContent>
+        <SessionDrawer type="add" />
         {sessions.list.length ? (
           <Table>
             <TableHeader>
