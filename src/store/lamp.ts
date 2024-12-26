@@ -1,10 +1,4 @@
-import {
-  deleteField,
-  doc,
-  getDoc,
-  setDoc,
-  updateDoc,
-} from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDoc, setDoc } from 'firebase/firestore';
 import { makeAutoObservable } from 'mobx';
 
 import { db } from '@/services/firebase/store';
@@ -16,21 +10,20 @@ class Lamp {
   exists = false;
   name = '';
   time = 0;
+  id = '';
 
   constructor() {
     makeAutoObservable(this);
   }
 
   async reset() {
-    const id = user?.profile?.uid;
-    const { name } = lamp;
+    const uid = user?.data?.profile?.uid;
+    const { id } = lamp;
 
-    if (!id || !name) return;
+    if (!uid || !id) return;
 
-    await updateDoc(doc(db, 'user', id), {
-      lampName: deleteField(),
-      lampTime: deleteField(),
-    });
+    await deleteDoc(doc(db, 'users', uid, 'lamps', id));
+    user.modifyLampList(id, 'delete');
 
     this.exists = false;
     this.name = '';
@@ -42,6 +35,7 @@ class Lamp {
     this.exists = true;
     this.name = data.lampName;
     this.time = data.lampTime;
+    this.id = data.lampId;
   }
 
   increaseTime(time: number) {
@@ -53,23 +47,34 @@ class Lamp {
   }
 
   async getLamp() {
-    const id = user?.profile?.uid;
-    if (!id) return;
-    const res = (await getDoc(doc(db, 'user', id))).data();
-    if (res?.lampName?.length === undefined || res?.lampTime === undefined)
-      return;
-    this.setLamp(res as LampData);
+    const id = user?.data?.profile?.uid;
+
+    const lampId = user.data?.lampList.at(-1);
+
+    if (!id || !lampId) return;
+    const res = await getDoc(doc(db, 'users', id, 'lamps', lampId));
+
+    this.setLamp(res.data() as LampData);
   }
 
   async addLamp(name: string, time = 0) {
-    const id = user?.profile?.uid;
-    if (!id) return;
-    await setDoc(
-      doc(db, 'user', id),
-      { lampName: name, lampTime: time },
-      { merge: true }
-    );
-    this.setLamp({ lampName: name, lampTime: time });
+    const uid = user?.data?.profile?.uid;
+    if (!uid) return;
+
+    const lampsCollectionRef = collection(db, 'users', uid, 'lamps');
+
+    const lampDocRef = doc(lampsCollectionRef);
+
+    const lampDataWithId = {
+      lampName: name,
+      lampTime: time,
+      lampId: lampDocRef.id,
+    };
+    await setDoc(lampDocRef, lampDataWithId);
+
+    user.modifyLampList(lampDocRef.id, 'add');
+
+    this.setLamp({ lampName: name, lampTime: time, lampId: lampDocRef.id });
   }
 }
 

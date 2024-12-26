@@ -18,7 +18,7 @@ export const App = observer(function App() {
         {user.initialized ? (
           <>
             <Login />
-            {user.profile && <Lamp />}
+            {user.data?.profile && <Lamp />}
           </>
         ) : (
           <div>Loading...</div>

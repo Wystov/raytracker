@@ -50,7 +50,7 @@ export const SessionsList = observer(function SessionsList() {
                 });
 
                 return (
-                  <TableRow key={day + time}>
+                  <TableRow key={id}>
                     <TableCell className="font-medium">
                       <p className="text-nowrap">{day}</p>
                       <p>{time}</p>

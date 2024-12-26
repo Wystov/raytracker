@@ -1,7 +1,8 @@
 import {
-  deleteField,
+  collection,
+  deleteDoc,
   doc,
-  getDoc,
+  getDocs,
   increment,
   setDoc,
   updateDoc,
@@ -22,12 +23,13 @@ class Sessions {
   }
 
   async reset() {
-    const id = user?.profile?.uid;
-    const { name } = lamp;
+    const uid = user?.data?.profile?.uid;
+    const { id } = lamp;
 
-    if (!id || !name) return;
+    if (!uid || !id) return;
 
-    await updateDoc(doc(db, 'sessions', id), { [name]: deleteField() });
+    await deleteDoc(doc(db, 'users', uid, 'lamps', id));
+
     this.setList([]);
   }
 
@@ -36,46 +38,61 @@ class Sessions {
   }
 
   async getSessions() {
-    const id = user?.profile?.uid;
-    const { name } = lamp;
-    if (!id || !name) return;
+    const uid = user?.data?.profile?.uid;
+    const { id } = lamp;
+    if (!uid || !id) return;
 
-    const res = (await getDoc(doc(db, 'sessions', id))).data();
-    if (!res?.[name]) return;
+    const res = await getDocs(
+      collection(db, 'users', uid, 'lamps', id, 'sessions')
+    );
 
-    this.setList(res[name]);
+    res.forEach((session) => this.list.push(session.data() as SessionData));
   }
 
   async addSession(session: SessionData) {
-    const id = user?.profile?.uid;
-    const { name } = lamp;
+    const uid = user?.data?.profile?.uid;
+    const { id } = lamp;
 
-    if (!id || !name) return;
+    if (!uid || !id) return;
+
+    const sessionsCollectionRef = collection(
+      db,
+      'users',
+      uid,
+      'lamps',
+      id,
+      'sessions'
+    );
+
+    const sessionDocRef = doc(sessionsCollectionRef);
+
+    const sessionDataWithId = { ...session, id: sessionDocRef.id };
+    await setDoc(sessionDocRef, sessionDataWithId);
+    await updateDoc(doc(db, 'users', uid, 'lamps', id), {
+      lampTime: increment(session.totalSessionTime),
+    });
 
     this.list.push(session);
-    await setDoc(doc(db, 'sessions', id), { [name]: this.list });
-    await setDoc(
-      doc(db, 'user', id),
-      { lampTime: increment(session.totalSessionTime) },
-      { merge: true }
-    );
     lamp.increaseTime(session.totalSessionTime);
   }
 
-  async removeSession(id: number) {
-    const uid = user?.profile?.uid;
-    const { name } = lamp;
+  async removeSession(sessionId: number) {
+    const uid = user?.data?.profile?.uid;
+    const { id } = lamp;
 
-    if (!uid || !name) return;
+    if (!uid || !id) return;
 
     const sessionTime =
-      this.list.find((session) => session.id === id)?.totalSessionTime ?? 0;
+      this.list.find((session) => session.id === sessionId)?.totalSessionTime ??
+      0;
 
-    this.setList(this.list.filter((session) => session.id !== id));
+    this.setList(this.list.filter((session) => session.id !== sessionId));
 
-    await setDoc(doc(db, 'sessions', uid), { [name]: this.list });
+    await deleteDoc(
+      doc(db, 'users', uid, 'lamps', id, 'sessions', sessionId.toString())
+    );
     await setDoc(
-      doc(db, 'user', uid),
+      doc(db, 'users', uid, 'lamps', id),
       { lampTime: increment(-sessionTime) },
       { merge: true }
     );
@@ -84,20 +101,24 @@ class Sessions {
   }
 
   async editSession(data: SessionData, sessionId?: number) {
-    const uid = user?.profile?.uid;
-    const { name } = lamp;
+    const uid = user?.data?.profile?.uid;
+    const { id } = lamp;
 
-    if (!uid || !name || sessionId === undefined) return;
+    if (!uid || !id || sessionId === undefined) return;
 
     const oldSession = this.list.find((s) => s.id === sessionId);
     if (!oldSession) return;
 
     const timeDiff = data.totalSessionTime - oldSession.totalSessionTime;
 
+    await updateDoc(
+      doc(db, 'users', uid, 'lamps', id, 'sessions', sessionId.toString()),
+      data
+    );
+    await updateDoc(doc(db, 'users', uid, 'lamps', id), {
+      lampTime: increment(timeDiff),
+    });
     this.setList(this.list.map((s) => (s.id === sessionId ? data : s)));
-
-    await setDoc(doc(db, 'sessions', uid), { [name]: this.list });
-    await updateDoc(doc(db, 'user', uid), { lampTime: increment(timeDiff) });
 
     lamp.increaseTime(timeDiff);
   }

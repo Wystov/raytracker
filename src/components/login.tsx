@@ -15,10 +15,10 @@ import {
 export const Login = observer(function Login() {
   return (
     <Card className="w-full mb-2">
-      {user.profile ? (
+      {user.data ? (
         <>
           <CardHeader>
-            <CardTitle>Welcome, {user.profile.displayName}</CardTitle>
+            <CardTitle>Welcome, {user.data.profile.displayName}</CardTitle>
           </CardHeader>
           <CardFooter>
             <Button

@@ -15,8 +15,9 @@ import { app } from './index';
 export const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
-export const signInWithGoogle = () => {
-  signInWithPopup(auth, provider);
+export const signInWithGoogle = async () => {
+  const { user: UserData } = await signInWithPopup(auth, provider);
+  user.setUser(UserData);
 };
 
 export const signOutUser = () => {
@@ -24,7 +25,7 @@ export const signOutUser = () => {
 };
 
 onAuthStateChanged(auth, async (data) => {
-  user.setUser(data);
+  await user.setUser(data);
   user.setInitialized();
   await lamp.getLamp();
   sessions.getSessions();
