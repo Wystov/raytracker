@@ -1,4 +1,4 @@
-import { deleteDoc, doc, getDoc, setDoc } from 'firebase/firestore';
+import { deleteDoc, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { makeAutoObservable } from 'mobx';
 
 import { dbRefs, setDbRefs } from '@/services/firebase/store';
@@ -83,6 +83,16 @@ class Lamp {
     user.modifyLampList(lampDocRef.id, 'add');
 
     this.setLamp({ lampName: name, lampTime: time, lampId: lampDocRef.id });
+  }
+
+  async editLamp(name: string) {
+    if (!dbRefs.lampDoc) {
+      console.error('db ref for lamp doc is not set');
+      return;
+    }
+
+    await updateDoc(dbRefs.lampDoc, { lampName: name });
+    this.name = name;
   }
 }
 
