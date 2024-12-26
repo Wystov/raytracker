@@ -4,8 +4,10 @@ import { Lamp } from '@/components/lamp';
 import { Login } from '@/components/login';
 import { user } from '@/store/user';
 
+import { Sessions } from './components/sessions';
 import { ThemeProvider } from './components/theme-provider';
 import { ThemeToggle } from './components/theme-toggle';
+import { lamp } from './store/lamp';
 
 export const App = observer(function App() {
   return (
@@ -19,6 +21,7 @@ export const App = observer(function App() {
           <>
             <Login />
             {user.data?.profile && <Lamp />}
+            {user.data?.profile && lamp.exists && <Sessions />}
           </>
         ) : (
           <div>Loading...</div>
