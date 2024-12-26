@@ -1,7 +1,7 @@
 import { deleteDoc, doc, getDoc, setDoc } from 'firebase/firestore';
 import { makeAutoObservable } from 'mobx';
 
-import { dbRefs } from '@/services/firebase/store';
+import { dbRefs, setDbRefs } from '@/services/firebase/store';
 import type { LampData } from '@/types';
 
 import { user } from './user';
@@ -77,6 +77,8 @@ class Lamp {
       lampId: lampDocRef.id,
     };
     await setDoc(lampDocRef, lampDataWithId);
+
+    setDbRefs({ uid: user.data?.profile.uid, lampId: lampDocRef.id });
 
     user.modifyLampList(lampDocRef.id, 'add');
 
