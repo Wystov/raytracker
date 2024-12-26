@@ -54,24 +54,24 @@ class User {
   }
 
   async modifyLampList(lampId: string, action: 'add' | 'delete') {
-    if (!dbRefs.userDoc) {
+    if (!dbRefs.userDoc || !this.data) {
       console.error('db ref user doc is not set');
       return;
     }
 
-    if (action === 'delete' && this.data !== null) {
-      this.data.lampList = this.data?.lampList.filter(
-        (lamp) => lamp !== lampId
-      );
+    let newLampList = this.data?.lampList ?? [];
+
+    if (action === 'delete') {
+      newLampList = newLampList.filter((lamp) => lamp !== lampId);
     } else if (action === 'add') {
-      this.data?.lampList.push(lampId);
+      newLampList.push(lampId);
     }
 
     await updateDoc(dbRefs.userDoc, {
-      lampList: this.data?.lampList,
+      lampList: newLampList,
     });
 
-    this.data?.lampList.push(lampId);
+    this.data.lampList = newLampList;
   }
 }
 
