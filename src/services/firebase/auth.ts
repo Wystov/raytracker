@@ -30,6 +30,8 @@ onAuthStateChanged(auth, async (data) => {
   user.setInitialized();
   if (!data?.uid) {
     setDbRefs({ reset: true });
+    lamp.reset();
+    sessions.reset();
     return;
   }
 

@@ -20,7 +20,7 @@ class Sessions {
     makeAutoObservable(this);
   }
 
-  async reset() {
+  async delete() {
     if (!dbRefs.lampDoc) {
       console.error('db ref for lamp doc is not set');
       return;
@@ -28,6 +28,10 @@ class Sessions {
 
     await deleteDoc(dbRefs.lampDoc);
 
+    this.reset();
+  }
+
+  reset() {
     this.setList([]);
   }
 

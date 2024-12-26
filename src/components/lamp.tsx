@@ -37,8 +37,8 @@ export const Lamp = observer(function Lamp() {
             <RemoveWithConfirmation
               text="This will remove the lamp and all related sessions."
               onClick={() => {
-                sessions.reset();
-                lamp.reset();
+                sessions.delete();
+                lamp.delete();
               }}
             />
           </>

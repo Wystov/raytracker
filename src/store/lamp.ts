@@ -16,7 +16,7 @@ class Lamp {
     makeAutoObservable(this);
   }
 
-  async reset() {
+  async delete() {
     if (!dbRefs.lampDoc) {
       console.error('db ref for lamp doc is not set');
       return;
@@ -24,6 +24,10 @@ class Lamp {
     await deleteDoc(dbRefs.lampDoc);
     user.modifyLampList(this.id, 'delete');
 
+    this.reset();
+  }
+
+  reset() {
     this.exists = false;
     this.name = '';
     this.time = 0;
