@@ -8,6 +8,9 @@ export type LampData = {
   lampName: string;
   lampTime: number;
   lampId: string;
+  bulbTime: number;
+  bulbLifetime: number;
+  bulbChangeDate: Date | null;
 };
 
 export type SessionData = {

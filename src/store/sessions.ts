@@ -8,6 +8,7 @@ import {
 } from 'firebase/firestore';
 import { makeAutoObservable } from 'mobx';
 
+import { getLampAndBulbTimeChange } from '@/lib/get-lamp-and-bulb-time-change';
 import { dbRefs } from '@/services/firebase/store';
 import { SessionData, SessionDataWithId } from '@/types';
 
@@ -73,6 +74,7 @@ class Sessions {
     await setDoc(sessionDocRef, sessionDataWithId);
     await updateDoc(dbRefs.lampDoc, {
       lampTime: increment(session.totalSessionTime),
+      bulbTime: increment(session.totalSessionTime),
     });
 
     this.list.push(sessionDataWithId);
@@ -91,20 +93,26 @@ class Sessions {
       return;
     }
 
-    const sessionTime =
-      this.list.find((session) => session.id === sessionId)?.totalSessionTime ??
-      0;
+    const session = this.list.find((session) => session.id === sessionId);
+
+    if (!session) {
+      console.error('no session found');
+      return;
+    }
+
+    const newTime = getLampAndBulbTimeChange(
+      session?.dateTime,
+      session?.timeInSeconds,
+      lamp.bulbChangeDate
+    );
+
+    await deleteDoc(dbRefs.sessionDoc(sessionId.toString()));
 
     this.setList(this.list.filter((session) => session.id !== sessionId));
 
-    await deleteDoc(dbRefs.sessionDoc(sessionId.toString()));
-    await setDoc(
-      dbRefs.lampDoc,
-      { lampTime: increment(-sessionTime) },
-      { merge: true }
-    );
+    await setDoc(dbRefs.lampDoc, newTime, { merge: true });
 
-    lamp.decreaseTime(sessionTime);
+    lamp.decreaseTime(session.totalSessionTime);
   }
 
   async editSession(data: SessionDataWithId) {
@@ -128,9 +136,14 @@ class Sessions {
     const timeDiff = data.totalSessionTime - oldSession.totalSessionTime;
 
     await updateDoc(dbRefs.sessionDoc(data.id), data);
-    await updateDoc(dbRefs.lampDoc, {
-      lampTime: increment(timeDiff),
-    });
+
+    const lampData = getLampAndBulbTimeChange(
+      oldSession.dateTime,
+      timeDiff,
+      lamp.bulbChangeDate
+    );
+
+    await updateDoc(dbRefs.lampDoc, lampData);
     this.setList(this.list.map((s) => (s.id === data.id ? data : s)));
 
     lamp.increaseTime(timeDiff);

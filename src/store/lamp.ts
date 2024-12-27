@@ -1,4 +1,11 @@
-import { deleteDoc, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import {
+  deleteDoc,
+  doc,
+  getDoc,
+  setDoc,
+  Timestamp,
+  updateDoc,
+} from 'firebase/firestore';
 import { makeAutoObservable } from 'mobx';
 
 import { dbRefs, setDbRefs } from '@/services/firebase/store';
@@ -10,6 +17,9 @@ class Lamp {
   exists = false;
   name = '';
   time = 0;
+  bulbTime = 0;
+  bulbLifetime = 0;
+  bulbChangeDate: Date | Timestamp | null = null;
   id = '';
 
   constructor() {
@@ -31,6 +41,9 @@ class Lamp {
     this.exists = false;
     this.name = '';
     this.time = 0;
+    this.bulbTime = 0;
+    this.bulbLifetime = 0;
+    this.id = '';
   }
 
   setLamp(data: LampData) {
@@ -42,14 +55,19 @@ class Lamp {
     this.name = data.lampName;
     this.time = data.lampTime;
     this.id = data.lampId;
+    this.bulbTime = data.bulbTime;
+    this.bulbLifetime = data.bulbLifetime;
+    this.bulbChangeDate = data.bulbChangeDate;
   }
 
   increaseTime(time: number) {
     this.time += time;
+    this.bulbTime += time;
   }
 
   decreaseTime(time: number) {
     this.time -= time;
+    this.bulbTime -= time;
   }
 
   async getLamp() {
@@ -74,7 +92,10 @@ class Lamp {
     const lampDataWithId = {
       lampName: name,
       lampTime: time,
+      bulbTime: time,
+      bulbLifetime: 1000,
       lampId: lampDocRef.id,
+      bulbChangeDate: null,
     };
     await setDoc(lampDocRef, lampDataWithId);
 
@@ -82,7 +103,7 @@ class Lamp {
 
     user.modifyLampList(lampDocRef.id, 'add');
 
-    this.setLamp({ lampName: name, lampTime: time, lampId: lampDocRef.id });
+    this.setLamp(lampDataWithId);
   }
 
   async editLamp(name: string) {
