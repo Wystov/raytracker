@@ -8,6 +8,7 @@ import {
 } from 'firebase/firestore';
 import { makeAutoObservable } from 'mobx';
 
+import { getLampAndBulbTimeChange } from '@/lib/get-lamp-and-bulb-time-change';
 import { dbRefs, setDbRefs } from '@/services/firebase/store';
 import type { LampData } from '@/types';
 
@@ -60,14 +61,30 @@ class Lamp {
     this.bulbChangeDate = data.bulbChangeDate;
   }
 
-  increaseTime(time: number) {
-    this.time += time;
-    this.bulbTime += time;
+  increaseTime(sessionTime: number, sessionDate?: Date | Timestamp) {
+    const timeChanges = getLampAndBulbTimeChange(
+      sessionDate,
+      sessionTime,
+      this.bulbChangeDate
+    );
+
+    this.time += sessionTime;
+    if (timeChanges.bulbTime) {
+      this.bulbTime += sessionTime;
+    }
   }
 
-  decreaseTime(time: number) {
-    this.time -= time;
-    this.bulbTime -= time;
+  decreaseTime(sessionTime: number, sessionDate?: Date | Timestamp) {
+    const timeChanges = getLampAndBulbTimeChange(
+      sessionDate,
+      sessionTime,
+      this.bulbChangeDate
+    );
+
+    this.time -= sessionTime;
+    if (timeChanges.bulbTime) {
+      this.bulbTime -= sessionTime;
+    }
   }
 
   async getLamp() {
@@ -114,6 +131,12 @@ class Lamp {
 
     await updateDoc(dbRefs.lampDoc, { lampName: name });
     this.name = name;
+  }
+
+  get bulbProgress() {
+    const lifetimeInSeconds = this.bulbLifetime * 60 * 60;
+    const progress = (this.bulbTime / lifetimeInSeconds) * 100;
+    return Math.min(Math.max(progress, 1), 100);
   }
 }
 

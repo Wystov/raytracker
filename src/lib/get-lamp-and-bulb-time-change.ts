@@ -3,7 +3,8 @@ import { FieldValue, increment, Timestamp } from 'firebase/firestore';
 export const getLampAndBulbTimeChange = (
   sessionDate: Timestamp | Date | undefined,
   sessionTime: number,
-  bulbChangeDate: Timestamp | Date | null
+  bulbChangeDate: Timestamp | Date | null,
+  type?: 'delete'
 ): { lampTime: FieldValue; bulbTime?: FieldValue } => {
   const sessionDateTimestamp =
     sessionDate instanceof Date ? Timestamp.fromDate(sessionDate) : sessionDate;
@@ -12,17 +13,20 @@ export const getLampAndBulbTimeChange = (
       ? Timestamp.fromDate(bulbChangeDate)
       : bulbChangeDate;
 
-  const isCurrentBulb =
-    sessionDateTimestamp && bulbChangeDateTimestamp
-      ? sessionDateTimestamp > bulbChangeDateTimestamp
-      : false;
+  const isCurrentBulb = () => {
+    if (!bulbChangeDateTimestamp) return true;
 
-  const updatedTime: { lampTime: FieldValue; bulbTime?: FieldValue } = {
-    lampTime: increment(-sessionTime),
+    return sessionDateTimestamp! > bulbChangeDateTimestamp;
   };
 
-  if (isCurrentBulb) {
-    updatedTime.bulbTime = increment(-sessionTime);
+  const changeValue = type === 'delete' ? -sessionTime : sessionTime;
+
+  const updatedTime: { lampTime: FieldValue; bulbTime?: FieldValue } = {
+    lampTime: increment(changeValue),
+  };
+
+  if (isCurrentBulb()) {
+    updatedTime.bulbTime = increment(changeValue);
   }
 
   return updatedTime;

@@ -78,7 +78,8 @@ class Sessions {
     });
 
     this.list.push(sessionDataWithId);
-    lamp.increaseTime(session.totalSessionTime);
+
+    lamp.increaseTime(session.totalSessionTime, session.dateTime);
   }
 
   async removeSession(sessionId: string) {
@@ -102,17 +103,18 @@ class Sessions {
 
     const newTime = getLampAndBulbTimeChange(
       session?.dateTime,
-      session?.timeInSeconds,
-      lamp.bulbChangeDate
+      session?.totalSessionTime,
+      lamp.bulbChangeDate,
+      'delete'
     );
 
     await deleteDoc(dbRefs.sessionDoc(sessionId.toString()));
 
     this.setList(this.list.filter((session) => session.id !== sessionId));
 
-    await setDoc(dbRefs.lampDoc, newTime, { merge: true });
+    await updateDoc(dbRefs.lampDoc, newTime);
 
-    lamp.decreaseTime(session.totalSessionTime);
+    lamp.decreaseTime(session.totalSessionTime, session.dateTime);
   }
 
   async editSession(data: SessionDataWithId) {
@@ -146,7 +148,7 @@ class Sessions {
     await updateDoc(dbRefs.lampDoc, lampData);
     this.setList(this.list.map((s) => (s.id === data.id ? data : s)));
 
-    lamp.increaseTime(timeDiff);
+    lamp.increaseTime(timeDiff, data.dateTime);
   }
 }
 
