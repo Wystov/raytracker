@@ -1,5 +1,5 @@
 /* eslint-disable mobx/missing-observer */
-import { Pencil } from 'lucide-react';
+import { Pencil, Plus } from 'lucide-react';
 
 import { SessionInputForm } from './session-input-form.tsx';
 import { Button } from './ui/button';
@@ -14,9 +14,11 @@ export const SessionDrawer = ({ type, id }: SessionDrawerProps) => {
     <Drawer>
       <DrawerTrigger asChild>
         {type === 'add' ? (
-          <Button className="mb-2">Add session</Button>
+          <Button size={'icon'}>
+            <Plus />
+          </Button>
         ) : (
-          <Button size="icon" variant={'outline'} className="mr-2">
+          <Button size="icon" variant={'outline'}>
             <Pencil />
           </Button>
         )}

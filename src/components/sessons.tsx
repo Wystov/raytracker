@@ -21,16 +21,17 @@ export const Sessions = observer(function SessionsList() {
       <CardHeader>
         <CardTitle>Sessions</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex flex-col gap-2">
         <SessionDrawer type="add" />
         {sessions.list.length ? (
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[100px]">Date</TableHead>
-                <TableHead>Time</TableHead>
-                <TableHead>Uses</TableHead>
-                <TableHead className="text-right">Total</TableHead>
+                <TableHead className="text-start">Date</TableHead>
+                <TableHead className="text-center">Time</TableHead>
+                <TableHead className="text-center">Uses</TableHead>
+                <TableHead className="text-center">Total</TableHead>
+                <TableHead className="text-center">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -56,14 +57,16 @@ export const Sessions = observer(function SessionsList() {
                       <p className="text-nowrap">{day}</p>
                       <p>{time}</p>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="text-center">
                       {toHumanReadableTime(session.timeInSeconds)}
                     </TableCell>
-                    <TableCell>{session.uses}</TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="text-center">
+                      {session.uses}
+                    </TableCell>
+                    <TableCell className="text-center">
                       {toHumanReadableTime(session.totalSessionTime)}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="flex flex-1 flex-wrap justify-center gap-2">
                       <SessionDrawer type="edit" id={id} />
                       <RemoveWithConfirmation
                         text="It will permanently delete this session from our servers."

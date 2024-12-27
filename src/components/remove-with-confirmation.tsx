@@ -1,7 +1,7 @@
 /* eslint-disable mobx/missing-observer */
 import { Trash2 } from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 
 import {
   AlertDialog,
@@ -27,7 +27,11 @@ export const RemoveWithConfirmation = ({
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="outline" size="icon">
+        <Button
+          variant="outline"
+          className="transition-colors  hover:bg-destructive hover:border-none focus-visible:"
+          size="icon"
+        >
           <Trash2 />
         </Button>
       </AlertDialogTrigger>
@@ -38,7 +42,12 @@ export const RemoveWithConfirmation = ({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={onClick}>Continue</AlertDialogAction>
+          <AlertDialogAction
+            className={buttonVariants({ variant: 'destructive' })}
+            onClick={onClick}
+          >
+            Delete
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

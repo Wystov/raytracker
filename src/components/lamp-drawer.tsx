@@ -31,6 +31,7 @@ export const LampDrawer = ({ type, lampName }: LampDrawerProps) => {
     type === 'add'
       ? 'Add a new lamp to start tracking time.'
       : 'Edit your existing lamp.';
+  const buttonVariant = type === 'add' ? 'default' : 'outline';
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -47,7 +48,7 @@ export const LampDrawer = ({ type, lampName }: LampDrawerProps) => {
   return (
     <Drawer>
       <DrawerTrigger asChild>
-        <Button variant="outline" size="icon">
+        <Button variant={buttonVariant} size="icon">
           {icon}
         </Button>
       </DrawerTrigger>
@@ -58,7 +59,7 @@ export const LampDrawer = ({ type, lampName }: LampDrawerProps) => {
             <DrawerDescription>{description}</DrawerDescription>
           </DrawerHeader>
           <form className="flex flex-col" onSubmit={handleSubmit}>
-            <div className="flex flex-col gap-2 px-4">
+            <div className="flex flex-col gap-2 px-4 mb-4">
               <label>Lamp name</label>
               <Input
                 placeholder="Lamp name"
@@ -68,12 +69,16 @@ export const LampDrawer = ({ type, lampName }: LampDrawerProps) => {
                 value={lampInputValue}
               />
             </div>
-            <DrawerFooter>
+            <DrawerFooter className="flex-row gap-2 py-0 mb-12">
               <DrawerClose asChild>
-                <Button type="submit">{title}</Button>
+                <Button variant={'outline'} className="flex-1">
+                  Cancel
+                </Button>
               </DrawerClose>
               <DrawerClose asChild>
-                <Button variant={'outline'}>Cancel</Button>
+                <Button type="submit" className="flex-1">
+                  {title}
+                </Button>
               </DrawerClose>
             </DrawerFooter>
           </form>

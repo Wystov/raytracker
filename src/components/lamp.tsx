@@ -10,11 +10,11 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 
 export const Lamp = observer(function Lamp() {
   return (
-    <Card className="w-full min-w-sm mb-2">
+    <Card className="w-full mb-2">
       <CardHeader>
         <CardTitle>Your lamp</CardTitle>
       </CardHeader>
-      <CardContent className="flex justify-between">
+      <CardContent className="flex justify-between w-full">
         {lamp.exists ? (
           <>
             <div className="flex items-center">
