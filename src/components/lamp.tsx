@@ -24,9 +24,9 @@ export const Lamp = observer(function Lamp() {
       <CardHeader>
         <CardTitle>Your lamp</CardTitle>
       </CardHeader>
-      <CardContent className="flex flex-col gap-2 py-0">
+      <CardContent className="flex flex-col gap-2">
         {lamp.exists ? (
-          <Collapsible className="flex flex-col gap-2">
+          <Collapsible className="flex flex-col gap-2 -mb-6">
             <div className="flex justify-between w-full">
               <div className="flex items-center">
                 {lamp.name}: {toHumanReadableTime(lamp.time)}
