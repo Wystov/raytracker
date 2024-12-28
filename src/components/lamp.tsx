@@ -32,7 +32,12 @@ export const Lamp = observer(function Lamp() {
                 {lamp.name}: {toHumanReadableTime(lamp.time)}
               </div>
               <div className="flex gap-2">
-                <LampDrawer type="edit" lampName={lamp.name} />
+                <LampDrawer
+                  type="edit"
+                  lampName={lamp.name}
+                  initTime={lamp.initTime}
+                  changeAfter={lamp.bulbLifetime}
+                />
                 <RemoveWithConfirmation
                   text="This will remove the lamp and all related sessions."
                   onClick={() => {

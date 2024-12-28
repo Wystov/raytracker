@@ -10,7 +10,8 @@ export type LampData = {
   lampId: string;
   bulbTime: number;
   bulbLifetime: number;
-  bulbChangeDate: Date | null;
+  bulbChangeDate: Date | Timestamp | null;
+  initTime: number;
 };
 
 export type SessionData = {

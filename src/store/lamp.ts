@@ -18,6 +18,7 @@ class Lamp {
   exists = false;
   name = '';
   time = 0;
+  initTime = 0;
   bulbTime = 0;
   bulbLifetime = 0;
   bulbChangeDate: Date | Timestamp | null = null;
@@ -59,6 +60,7 @@ class Lamp {
     this.bulbTime = data.bulbTime;
     this.bulbLifetime = data.bulbLifetime;
     this.bulbChangeDate = data.bulbChangeDate;
+    this.initTime = data.initTime;
   }
 
   increaseTime(sessionTime: number, sessionDate?: Date | Timestamp) {
@@ -98,22 +100,26 @@ class Lamp {
     this.setLamp(res.data() as LampData);
   }
 
-  async addLamp(name: string, time = 0) {
+  async addLamp(name: string, initTime = 0, changeAfter = 1000) {
     if (!dbRefs.lampsCollection) {
       console.error('db ref for lamps collections is not set');
       return;
     }
 
+    const initTimeInSec = initTime * 3600;
+
     const lampDocRef = doc(dbRefs.lampsCollection);
 
     const lampDataWithId = {
       lampName: name,
-      lampTime: time,
-      bulbTime: time,
-      bulbLifetime: 1000,
+      lampTime: initTimeInSec,
+      bulbTime: initTimeInSec,
+      bulbLifetime: changeAfter,
       lampId: lampDocRef.id,
       bulbChangeDate: null,
+      initTime: initTimeInSec,
     };
+
     await setDoc(lampDocRef, lampDataWithId);
 
     setDbRefs({ uid: user.data?.profile.uid, lampId: lampDocRef.id });
@@ -123,14 +129,35 @@ class Lamp {
     this.setLamp(lampDataWithId);
   }
 
-  async editLamp(name: string) {
+  async editLamp(name: string, initTime: number, changeAfter: number) {
     if (!dbRefs.lampDoc) {
       console.error('db ref for lamp doc is not set');
       return;
     }
 
-    await updateDoc(dbRefs.lampDoc, { lampName: name });
-    this.name = name;
+    const initTimeInSec = initTime * 3600;
+
+    const initDiff = Math.abs(this.initTime - initTimeInSec);
+    const isInitIncrease = initTimeInSec > this.initTime;
+
+    const newData = {
+      lampName: name,
+      lampTime: isInitIncrease
+        ? this.bulbTime + initDiff
+        : this.bulbTime - initDiff,
+      bulbLifetime: changeAfter,
+      initTime: initTimeInSec,
+      bulbTime: this.bulbTime,
+      lampId: this.id,
+      bulbChangeDate: this.bulbChangeDate,
+    };
+
+    if (this.bulbChangeDate === null) {
+      newData.bulbTime = newData.lampTime;
+
+      await updateDoc(dbRefs.lampDoc, newData);
+      this.setLamp(newData);
+    }
   }
 
   get bulbProgress() {
