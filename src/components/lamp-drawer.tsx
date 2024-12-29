@@ -72,7 +72,11 @@ export const LampDrawer = ({
   return (
     <Drawer>
       <DrawerTrigger asChild>
-        <Button variant={buttonVariant} size="icon">
+        <Button
+          variant={buttonVariant}
+          size="icon"
+          onClick={(e) => e.stopPropagation()}
+        >
           {icon}
         </Button>
       </DrawerTrigger>

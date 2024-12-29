@@ -14,11 +14,15 @@ export const SessionDrawer = ({ type, id }: SessionDrawerProps) => {
     <Drawer>
       <DrawerTrigger asChild>
         {type === 'add' ? (
-          <Button size={'icon'}>
+          <Button size="icon">
             <Plus />
           </Button>
         ) : (
-          <Button size="icon" variant={'outline'}>
+          <Button
+            size="icon"
+            variant={'outline'}
+            onClick={(e) => e.stopPropagation()}
+          >
             <Pencil />
           </Button>
         )}

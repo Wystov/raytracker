@@ -31,6 +31,7 @@ export const RemoveWithConfirmation = ({
           variant="outline"
           className="transition-colors  hover:bg-destructive hover:border-none focus-visible:"
           size="icon"
+          onClick={(e) => e.stopPropagation()}
         >
           <Trash2 />
         </Button>

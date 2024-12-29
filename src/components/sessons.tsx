@@ -13,6 +13,7 @@ import {
 import { toHumanReadableTime } from '@/lib/human-readable-time';
 import { sessions } from '@/store/sessions';
 
+import { ActionsDropdown } from './actions-dropdown';
 import { SessionDrawer } from './session-drawer';
 
 export const Sessions = observer(function SessionsList() {
@@ -31,7 +32,7 @@ export const Sessions = observer(function SessionsList() {
                 <TableHead className="text-center">Time</TableHead>
                 <TableHead className="text-center">Uses</TableHead>
                 <TableHead className="text-center">Total</TableHead>
-                <TableHead className="text-center">Actions</TableHead>
+                <TableHead></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -66,12 +67,14 @@ export const Sessions = observer(function SessionsList() {
                     <TableCell className="text-center">
                       {toHumanReadableTime(session.totalSessionTime)}
                     </TableCell>
-                    <TableCell className="flex flex-1 flex-wrap justify-center gap-2">
-                      <SessionDrawer type="edit" id={id} />
-                      <RemoveWithConfirmation
-                        text="It will permanently delete this session from our servers."
-                        onClick={() => sessions.removeSession(id)}
-                      />
+                    <TableCell className="pl-0">
+                      <ActionsDropdown>
+                        <SessionDrawer type="edit" id={id} />
+                        <RemoveWithConfirmation
+                          text="It will permanently delete this session from our servers."
+                          onClick={() => sessions.removeSession(id)}
+                        />
+                      </ActionsDropdown>
                     </TableCell>
                   </TableRow>
                 );

@@ -5,6 +5,7 @@ import { toHumanReadableTime } from '@/lib/human-readable-time';
 import { lamp } from '@/store/lamp';
 import { sessions } from '@/store/sessions';
 
+import { ActionsDropdown } from './actions-dropdown';
 import { LampDrawer } from './lamp-drawer';
 import { RemoveWithConfirmation } from './remove-with-confirmation';
 import { Button } from './ui/button';
@@ -32,19 +33,21 @@ export const Lamp = observer(function Lamp() {
                 {lamp.name}: {toHumanReadableTime(lamp.time)}
               </div>
               <div className="flex gap-2">
-                <LampDrawer
-                  type="edit"
-                  lampName={lamp.name}
-                  initTime={lamp.initTime}
-                  changeAfter={lamp.bulbLifetime}
-                />
-                <RemoveWithConfirmation
-                  text="This will remove the lamp and all related sessions."
-                  onClick={() => {
-                    sessions.delete();
-                    lamp.delete();
-                  }}
-                />
+                <ActionsDropdown>
+                  <LampDrawer
+                    type="edit"
+                    lampName={lamp.name}
+                    initTime={lamp.initTime}
+                    changeAfter={lamp.bulbLifetime}
+                  />
+                  <RemoveWithConfirmation
+                    text="This will remove the lamp and all related sessions."
+                    onClick={() => {
+                      sessions.delete();
+                      lamp.delete();
+                    }}
+                  />
+                </ActionsDropdown>
               </div>
             </div>
             <CollapsibleContent className="space-y-4">
