@@ -13,7 +13,7 @@ export const App = observer(function App() {
   return (
     <ThemeProvider defaultTheme="system" storageKey="raytracker-theme">
       <main
-        className="flex flex-1 flex-col items-center min-w-80 max-w-fit mx-auto p-4"
+        className="flex flex-1 flex-col items-center w-full max-w-96 mx-auto p-2"
         data-vaul-drawer-wrapper
       >
         <ThemeToggle />

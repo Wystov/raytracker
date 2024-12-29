@@ -18,7 +18,7 @@ import { SessionDrawer } from './session-drawer';
 
 export const Sessions = observer(function SessionsList() {
   return (
-    <Card className="w-full min-w-fit">
+    <Card className="w-full">
       <CardHeader>
         <CardTitle>Sessions</CardTitle>
       </CardHeader>
