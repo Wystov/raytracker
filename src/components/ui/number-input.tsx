@@ -21,7 +21,7 @@ export const NumberInput: React.FC<NumberInputProps> = ({
   min = 1,
 }) => {
   const [lastInputTime, setLastInputTime] = useState<number | null>(null);
-  const inputWidthClass = `w-${12 * Math.ceil(maxLength / 2)}`;
+  const inputWidthClass = maxLength < 3 ? 'w-12' : 'w-16';
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key >= '0' && e.key <= '9') {
