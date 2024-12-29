@@ -1,4 +1,5 @@
 /* eslint-disable mobx/missing-observer */
+import { DropdownMenuArrow } from '@radix-ui/react-dropdown-menu';
 import { EllipsisVertical } from 'lucide-react';
 import { ReactNode } from 'react';
 
@@ -22,7 +23,11 @@ export const ActionsDropdown = ({ children }: ActionsDropdownProps) => {
           <EllipsisVertical />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent side="left" className="flex gap-2 min-w-fit p-3">
+      <DropdownMenuContent
+        side="left"
+        sideOffset={-6}
+        className="flex gap-2 min-w-fit p-3"
+      >
         {children &&
           Array.isArray(children) &&
           children.map((item: ReactNode, i) => (
@@ -30,6 +35,7 @@ export const ActionsDropdown = ({ children }: ActionsDropdownProps) => {
               {item}
             </DropdownMenuItem>
           ))}
+        <DropdownMenuArrow className="fill-muted -translate-y-[1px]" />
       </DropdownMenuContent>
     </DropdownMenu>
   );

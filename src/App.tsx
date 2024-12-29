@@ -4,7 +4,7 @@ import { Lamp } from '@/components/lamp';
 import { Login } from '@/components/login';
 import { user } from '@/store/user';
 
-import { Sessions } from './components/sessons';
+import { Sessions } from './components/sessions';
 import { ThemeProvider } from './components/theme-provider';
 import { ThemeToggle } from './components/theme-toggle';
 import { lamp } from './store/lamp';
