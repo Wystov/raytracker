@@ -35,10 +35,11 @@ export interface LampDrawerProps {
 export const LampDrawer = observer(function LampDrawer({
   type,
 }: LampDrawerProps) {
+  const { name, initTime, bulbLifetime } = lamp;
   const defaultValues = {
-    lampName: type === 'add' ? '' : lamp.name,
-    lampInitTime: type === 'add' ? 0 : lamp.initTime / 3600,
-    lampToChangeTime: type === 'add' ? 1000 : lamp.bulbLifetime,
+    lampName: type === 'add' ? '' : name,
+    lampInitTime: type === 'add' ? 0 : initTime / 3600,
+    lampToChangeTime: type === 'add' ? 1000 : bulbLifetime,
   };
 
   const form = useForm<FormSchemaType>({

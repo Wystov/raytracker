@@ -13,8 +13,16 @@ class User {
     makeAutoObservable(this);
   }
 
+  get lampId() {
+    return this.data?.lampList.at(-1);
+  }
+
   setInitialized() {
     this.initialized = true;
+  }
+
+  setData(data: UserData) {
+    this.data = data;
   }
 
   async setUser(user: UserInfo | null) {
@@ -34,7 +42,7 @@ class User {
     const userDocSnapshot = await getDoc(userDocRef);
 
     if (userDocSnapshot.exists()) {
-      this.data = userDocSnapshot.data() as UserData;
+      this.setData(userDocSnapshot.data() as UserData);
       return;
     }
 
@@ -50,7 +58,7 @@ class User {
 
     await setDoc(userDocRef, userData);
 
-    this.data = userData;
+    this.setData(userData);
   }
 
   async modifyLampList(lampId: string, action: 'add' | 'delete') {

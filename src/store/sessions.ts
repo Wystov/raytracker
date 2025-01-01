@@ -42,6 +42,14 @@ class Sessions {
     this.list = list;
   }
 
+  addToList(session: SessionDataWithId) {
+    this.list.push(session);
+  }
+
+  removeFromList(sessionId: string) {
+    this.list = this.list.filter((session) => session.id !== sessionId);
+  }
+
   async getSessions() {
     if (!dbRefs.sessionsCollection) {
       console.error('db ref for sessions collection is not set');
@@ -53,7 +61,7 @@ class Sessions {
     );
 
     res.forEach((session) =>
-      this.list.push(session.data() as SessionDataWithId)
+      this.addToList(session.data() as SessionDataWithId)
     );
   }
 
@@ -114,7 +122,7 @@ class Sessions {
 
     await deleteDoc(dbRefs.sessionDoc(sessionId.toString()));
 
-    this.setList(this.list.filter((session) => session.id !== sessionId));
+    this.removeFromList(sessionId);
 
     await updateDoc(dbRefs.lampDoc, newTime);
 

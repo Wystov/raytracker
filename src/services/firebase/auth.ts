@@ -5,6 +5,7 @@ import {
   signInWithPopup,
   signOut,
 } from 'firebase/auth';
+import { runInAction } from 'mobx';
 
 import { lamp } from '@/store/lamp';
 import { sessions } from '@/store/sessions';
@@ -35,7 +36,7 @@ onAuthStateChanged(auth, async (data) => {
     return;
   }
 
-  setDbRefs({ uid: data.uid, lampId: user.data?.lampList.at(-1) });
+  setDbRefs({ uid: data.uid, lampId: runInAction(() => user.lampId) });
   await lamp.getLamp();
   sessions.getSessions();
 });
