@@ -35,7 +35,7 @@ export const Sessions = observer(function SessionsList() {
                 <TableHead className="text-center">Time</TableHead>
                 <TableHead className="text-center">Uses</TableHead>
                 <TableHead className="text-center">Total</TableHead>
-                <TableHead></TableHead>
+                <TableHead className="w-0"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -70,7 +70,7 @@ export const Sessions = observer(function SessionsList() {
                     <TableCell className="text-center">
                       {toHumanReadableTime(session.totalSessionTime)}
                     </TableCell>
-                    <TableCell className="pl-0">
+                    <TableCell className="pl-0 min-w-fit">
                       <ActionsDropdown type="session" id={id}></ActionsDropdown>
                     </TableCell>
                   </TableRow>

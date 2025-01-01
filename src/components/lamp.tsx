@@ -31,7 +31,7 @@ export const Lamp = observer(function Lamp() {
               <div className="flex items-center">
                 {lamp.name}: {toHumanReadableTime(lamp.time)}
               </div>
-              <div className="flex gap-2">
+              <div className="mr-2">
                 <ActionsDropdown type="lamp" id=""></ActionsDropdown>
               </div>
             </div>
