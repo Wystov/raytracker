@@ -129,13 +129,17 @@ class Lamp {
     this.setLamp(lampDataWithId);
   }
 
-  async editLamp(name: string, initTime: number, changeAfter: number) {
+  async editLamp(
+    name: string,
+    initTime: number | undefined,
+    changeAfter: number
+  ) {
     if (!dbRefs.lampDoc) {
       console.error('db ref for lamp doc is not set');
       return;
     }
 
-    const initTimeInSec = initTime * 3600;
+    const initTimeInSec = (initTime ?? 0) * 3600;
 
     const initDiff = Math.abs(this.initTime - initTimeInSec);
     const isInitIncrease = initTimeInSec > this.initTime;
