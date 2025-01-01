@@ -81,7 +81,7 @@ class Sessions {
       bulbTime: increment(session.totalSessionTime),
     });
 
-    this.list.push(sessionDataWithId);
+    this.list.unshift(sessionDataWithId);
 
     lamp.increaseTime(session.totalSessionTime, session.dateTime);
   }
