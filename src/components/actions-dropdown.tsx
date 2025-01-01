@@ -25,18 +25,10 @@ interface ActionsDropdownProps {
 }
 
 export const ActionsDropdown = ({ id, type }: ActionsDropdownProps) => {
-  const drawerProps: SessionDrawerProps | LampDrawerProps =
-    type === 'session'
-      ? {
-          type: 'edit',
-          id,
-        }
-      : {
-          type: 'edit',
-          lampName: lamp.name,
-          initTime: lamp.initTime,
-          changeAfter: lamp.bulbLifetime,
-        };
+  const drawerProps: LampDrawerProps | SessionDrawerProps = {
+    type: 'edit',
+    id,
+  };
 
   const removeWithConfirmationProps =
     type === 'session'

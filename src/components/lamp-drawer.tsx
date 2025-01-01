@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Plus } from 'lucide-react';
+import { observer } from 'mobx-react-lite';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -29,25 +30,20 @@ type FormSchemaType = z.infer<typeof formSchema>;
 
 export interface LampDrawerProps {
   type: 'add' | 'edit';
-  lampName?: string;
-  initTime?: number;
-  changeAfter?: number;
 }
 
-/* eslint-disable mobx/missing-observer */
-export const LampDrawer = ({
+export const LampDrawer = observer(function LampDrawer({
   type,
-  lampName,
-  initTime,
-  changeAfter,
-}: LampDrawerProps) => {
+}: LampDrawerProps) {
+  const defaultValues = {
+    lampName: type === 'add' ? '' : lamp.name,
+    lampInitTime: type === 'add' ? 0 : lamp.initTime / 3600,
+    lampToChangeTime: type === 'add' ? 1000 : lamp.bulbLifetime,
+  };
+
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      lampName: lampName ?? '',
-      lampInitTime: (initTime ?? 0) / 3600,
-      lampToChangeTime: changeAfter ?? 1000,
-    },
+    defaultValues,
   });
 
   const title = type === 'add' ? 'Add' : 'Edit';
@@ -160,4 +156,4 @@ export const LampDrawer = ({
       </DrawerContent>
     </>
   );
-};
+});

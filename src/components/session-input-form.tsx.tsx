@@ -51,8 +51,6 @@ export const SessionInputForm = observer(function SessionInputForm({
   type,
   editSessionId,
 }: SessionInputFormProps) {
-  // const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-
   const session =
     type === 'add'
       ? sessions.list.at(-1)
