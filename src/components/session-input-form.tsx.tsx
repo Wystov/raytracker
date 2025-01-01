@@ -53,7 +53,7 @@ export const SessionInputForm = observer(function SessionInputForm({
 }: SessionInputFormProps) {
   const session =
     type === 'add'
-      ? sessions.list.at(-1)
+      ? sessions.list[0]
       : sessions.list.find((s) => s.id === editSessionId);
 
   let date = type === 'add' ? new Date() : session?.dateTime;

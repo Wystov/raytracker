@@ -3,6 +3,8 @@ import {
   doc,
   getDocs,
   increment,
+  orderBy,
+  query,
   setDoc,
   updateDoc,
 } from 'firebase/firestore';
@@ -46,7 +48,9 @@ class Sessions {
       return;
     }
 
-    const res = await getDocs(dbRefs.sessionsCollection);
+    const res = await getDocs(
+      query(dbRefs.sessionsCollection, orderBy('dateTime', 'desc'))
+    );
 
     res.forEach((session) =>
       this.list.push(session.data() as SessionDataWithId)
