@@ -1,6 +1,5 @@
 import { observer } from 'mobx-react-lite';
 
-import { RemoveWithConfirmation } from '@/components/remove-with-confirmation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Table,
@@ -15,6 +14,7 @@ import { sessions } from '@/store/sessions';
 
 import { ActionsDropdown } from './actions-dropdown';
 import { SessionDrawer } from './session-drawer';
+import { Drawer } from './ui/drawer';
 
 export const Sessions = observer(function SessionsList() {
   return (
@@ -23,7 +23,10 @@ export const Sessions = observer(function SessionsList() {
         <CardTitle>Sessions</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
-        <SessionDrawer type="add" />
+        <Drawer>
+          <SessionDrawer type="add" />
+        </Drawer>
+
         {sessions.list.length ? (
           <Table>
             <TableHeader>
@@ -68,13 +71,7 @@ export const Sessions = observer(function SessionsList() {
                       {toHumanReadableTime(session.totalSessionTime)}
                     </TableCell>
                     <TableCell className="pl-0">
-                      <ActionsDropdown>
-                        <SessionDrawer type="edit" id={id} />
-                        <RemoveWithConfirmation
-                          text="It will permanently delete this session from our servers."
-                          onClick={() => sessions.removeSession(id)}
-                        />
-                      </ActionsDropdown>
+                      <ActionsDropdown type="session" id={id}></ActionsDropdown>
                     </TableCell>
                   </TableRow>
                 );

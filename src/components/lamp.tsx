@@ -3,11 +3,9 @@ import { observer } from 'mobx-react-lite';
 
 import { toHumanReadableTime } from '@/lib/human-readable-time';
 import { lamp } from '@/store/lamp';
-import { sessions } from '@/store/sessions';
 
 import { ActionsDropdown } from './actions-dropdown';
 import { LampDrawer } from './lamp-drawer';
-import { RemoveWithConfirmation } from './remove-with-confirmation';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import {
@@ -15,6 +13,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from './ui/collapsible';
+import { Drawer } from './ui/drawer';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { Progress } from './ui/progress';
 import { Separator } from './ui/separator';
@@ -33,21 +32,7 @@ export const Lamp = observer(function Lamp() {
                 {lamp.name}: {toHumanReadableTime(lamp.time)}
               </div>
               <div className="flex gap-2">
-                <ActionsDropdown>
-                  <LampDrawer
-                    type="edit"
-                    lampName={lamp.name}
-                    initTime={lamp.initTime}
-                    changeAfter={lamp.bulbLifetime}
-                  />
-                  <RemoveWithConfirmation
-                    text="This will remove the lamp and all related sessions."
-                    onClick={() => {
-                      sessions.delete();
-                      lamp.delete();
-                    }}
-                  />
-                </ActionsDropdown>
+                <ActionsDropdown type="lamp" id=""></ActionsDropdown>
               </div>
             </div>
             <CollapsibleContent className="space-y-4">
@@ -86,7 +71,9 @@ export const Lamp = observer(function Lamp() {
             </CollapsibleTrigger>
           </Collapsible>
         ) : (
-          <LampDrawer type="add" />
+          <Drawer>
+            <LampDrawer type="add" />
+          </Drawer>
         )}
       </CardContent>
     </Card>

@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Pencil, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -8,7 +8,6 @@ import { Input } from '@/components/ui/input';
 import { lamp } from '@/store/lamp';
 
 import {
-  Drawer,
   DrawerClose,
   DrawerContent,
   DrawerDescription,
@@ -28,7 +27,7 @@ const formSchema = z.object({
 
 type FormSchemaType = z.infer<typeof formSchema>;
 
-interface LampDrawerProps {
+export interface LampDrawerProps {
   type: 'add' | 'edit';
   lampName?: string;
   initTime?: number;
@@ -51,13 +50,11 @@ export const LampDrawer = ({
     },
   });
 
-  const icon = type === 'add' ? <Plus /> : <Pencil />;
   const title = type === 'add' ? 'Add' : 'Edit';
   const description =
     type === 'add'
       ? 'Add a new lamp to start tracking time.'
       : 'Edit your existing lamp.';
-  const buttonVariant = type === 'add' ? 'default' : 'outline';
 
   const onSubmit = ({
     lampName,
@@ -70,16 +67,14 @@ export const LampDrawer = ({
   };
 
   return (
-    <Drawer>
-      <DrawerTrigger asChild>
-        <Button
-          variant={buttonVariant}
-          size="icon"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {icon}
-        </Button>
-      </DrawerTrigger>
+    <>
+      {type === 'add' && (
+        <DrawerTrigger asChild>
+          <Button variant="default" size="icon">
+            <Plus />
+          </Button>
+        </DrawerTrigger>
+      )}
       <DrawerContent>
         <div className="mx-auto w-full max-w-sm flex flex-col">
           <DrawerHeader>
@@ -163,6 +158,6 @@ export const LampDrawer = ({
           </Form>
         </div>
       </DrawerContent>
-    </Drawer>
+    </>
   );
 };
