@@ -1,11 +1,16 @@
 import {
   deleteDoc,
   doc,
+  DocumentData,
   getDocs,
   increment,
+  limit,
   orderBy,
   query,
+  QueryConstraint,
+  QueryDocumentSnapshot,
   setDoc,
+  startAfter,
   updateDoc,
 } from 'firebase/firestore';
 import { makeAutoObservable } from 'mobx';
@@ -18,6 +23,8 @@ import { lamp } from './lamp';
 
 class Sessions {
   list = [] as SessionDataWithId[];
+  itemsPerPage = 5;
+  lastKey: QueryDocumentSnapshot<DocumentData> | null = null;
 
   constructor() {
     makeAutoObservable(this);
@@ -50,19 +57,28 @@ class Sessions {
     this.list = this.list.filter((session) => session.id !== sessionId);
   }
 
-  async getSessions() {
+  async getSessions(load: 'more' | 'init' = 'init') {
     if (!dbRefs.sessionsCollection) {
       console.error('db ref for sessions collection is not set');
       return;
     }
 
-    const res = await getDocs(
-      query(dbRefs.sessionsCollection, orderBy('dateTime', 'desc'))
-    );
+    const constraints: QueryConstraint[] = [
+      orderBy('dateTime', 'desc'),
+      limit(this.itemsPerPage),
+    ];
+
+    if (load === 'more' && this.lastKey) {
+      constraints.push(startAfter(this.lastKey));
+    }
+
+    const res = await getDocs(query(dbRefs.sessionsCollection, ...constraints));
 
     res.forEach((session) =>
       this.addToList(session.data() as SessionDataWithId)
     );
+
+    this.lastKey = res.docs[res.docs.length - 1];
   }
 
   async addSession(session: SessionData) {

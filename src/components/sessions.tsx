@@ -1,6 +1,12 @@
 import { observer } from 'mobx-react-lite';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import {
   Table,
   TableBody,
@@ -15,19 +21,19 @@ import { sessions } from '@/store/sessions';
 
 import { ActionsDropdown } from './actions-dropdown';
 import { SessionDrawer } from './session-drawer';
+import { Button } from './ui/button';
 import { Drawer } from './ui/drawer';
 
 export const Sessions = observer(function SessionsList() {
   return (
     <Card className="w-full">
-      <CardHeader>
-        <CardTitle>Sessions: {lamp.sessionsCount}</CardTitle>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-2">
+      <CardHeader className="flex flex-col gap-4">
+        <CardTitle>Sessions</CardTitle>
         <Drawer>
           <SessionDrawer type="add" />
         </Drawer>
-
+      </CardHeader>
+      <CardContent className="flex flex-col gap-2">
         {sessions.list.length ? (
           <Table>
             <TableHeader>
@@ -83,6 +89,19 @@ export const Sessions = observer(function SessionsList() {
           <p>No records</p>
         )}
       </CardContent>
+      <CardFooter className="flex-col gap-4 justify-between">
+        <span className="text-sm font-medium text-muted-foreground">
+          Showing {sessions.list.length} of {lamp.sessionsCount}
+        </span>
+        {sessions.list.length < lamp.sessionsCount && (
+          <Button
+            variant={'outline'}
+            onClick={() => sessions.getSessions('more')}
+          >
+            Load more
+          </Button>
+        )}
+      </CardFooter>
     </Card>
   );
 });

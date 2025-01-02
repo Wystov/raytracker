@@ -1,5 +1,5 @@
 /* eslint-disable mobx/missing-observer */
-import { Plus } from 'lucide-react';
+import { CalendarPlus } from 'lucide-react';
 
 import { SessionInputForm } from './session-input-form.tsx';
 import { Button } from './ui/button';
@@ -14,8 +14,9 @@ export const SessionDrawer = ({ type, id }: SessionDrawerProps) => {
     <>
       <DrawerTrigger asChild>
         {type === 'add' && (
-          <Button size="icon">
-            <Plus />
+          <Button className="self-center">
+            <CalendarPlus />
+            Add
           </Button>
         )}
       </DrawerTrigger>
