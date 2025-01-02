@@ -1,45 +1,19 @@
 import { observer } from 'mobx-react-lite';
 
 import { Button } from '@/components/ui/button';
-import { signInWithGoogle, signOutUser } from '@/services/firebase/auth';
-import { user } from '@/store/user';
+import { signInWithGoogle } from '@/services/firebase/auth';
 
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from './ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 
 export const Login = observer(function Login() {
   return (
     <Card className="w-full mb-2">
-      {user.data ? (
-        <>
-          <CardHeader>
-            <CardTitle>Welcome, {user.data.profile.displayName}</CardTitle>
-          </CardHeader>
-          <CardFooter>
-            <Button
-              onClick={() => {
-                signOutUser();
-              }}
-            >
-              Sign Out
-            </Button>
-          </CardFooter>
-        </>
-      ) : (
-        <>
-          <CardHeader>
-            <CardTitle>Sign in to use service</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Button onClick={() => signInWithGoogle()}>Sign In</Button>
-          </CardContent>
-        </>
-      )}
+      <CardHeader>
+        <CardTitle>Sign in to track your lamp time</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Button onClick={() => signInWithGoogle()}>Sign In</Button>
+      </CardContent>
     </Card>
   );
 });
