@@ -10,6 +10,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { toHumanReadableTime } from '@/lib/human-readable-time';
+import { lamp } from '@/store/lamp';
 import { sessions } from '@/store/sessions';
 
 import { ActionsDropdown } from './actions-dropdown';
@@ -20,7 +21,7 @@ export const Sessions = observer(function SessionsList() {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Sessions</CardTitle>
+        <CardTitle>Sessions: {lamp.sessionsCount}</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
         <Drawer>

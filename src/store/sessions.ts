@@ -87,10 +87,12 @@ class Sessions {
     await updateDoc(dbRefs.lampDoc, {
       lampTime: increment(session.totalSessionTime),
       bulbTime: increment(session.totalSessionTime),
+      sessionsCount: increment(1),
     });
 
     this.list.unshift(sessionDataWithId);
 
+    lamp.increaseSessionsCount();
     lamp.increaseTime(session.totalSessionTime, session.dateTime);
   }
 
@@ -124,7 +126,12 @@ class Sessions {
 
     this.removeFromList(sessionId);
 
-    await updateDoc(dbRefs.lampDoc, newTime);
+    await updateDoc(dbRefs.lampDoc, {
+      ...newTime,
+      sessionsCount: increment(-1),
+    });
+
+    lamp.decreaseSessionsCount();
 
     lamp.decreaseTime(session.totalSessionTime, session.dateTime);
   }

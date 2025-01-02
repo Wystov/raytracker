@@ -23,6 +23,7 @@ class Lamp {
   bulbLifetime = 0;
   bulbChangeDate: Date | Timestamp | null = null;
   id = '';
+  sessionsCount = 0;
 
   constructor() {
     makeAutoObservable(this);
@@ -61,6 +62,7 @@ class Lamp {
     this.bulbLifetime = data.bulbLifetime;
     this.bulbChangeDate = data.bulbChangeDate;
     this.initTime = data.initTime;
+    this.sessionsCount = data.sessionsCount ?? 0;
   }
 
   increaseTime(sessionTime: number, sessionDate?: Date | Timestamp) {
@@ -87,6 +89,14 @@ class Lamp {
     if (timeChanges.bulbTime) {
       this.bulbTime -= sessionTime;
     }
+  }
+
+  increaseSessionsCount() {
+    this.sessionsCount += 1;
+  }
+
+  decreaseSessionsCount() {
+    this.sessionsCount -= 1;
   }
 
   async getLamp() {
@@ -118,6 +128,7 @@ class Lamp {
       lampId: lampDocRef.id,
       bulbChangeDate: null,
       initTime: initTimeInSec,
+      sessionsCount: 0,
     };
 
     await setDoc(lampDocRef, lampDataWithId);
@@ -154,6 +165,7 @@ class Lamp {
       bulbTime: this.bulbTime,
       lampId: this.id,
       bulbChangeDate: this.bulbChangeDate,
+      sessionsCount: this.sessionsCount,
     };
 
     if (this.bulbChangeDate === null) {

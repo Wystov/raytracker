@@ -12,6 +12,7 @@ export type LampData = {
   bulbLifetime: number;
   bulbChangeDate: Date | Timestamp | null;
   initTime: number;
+  sessionsCount: number;
 };
 
 export type SessionData = {
