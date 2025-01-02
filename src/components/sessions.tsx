@@ -6,6 +6,7 @@ import { sessions } from '@/store/sessions';
 import { SessionDrawer } from './session-drawer';
 import { SessionsTable } from './sessions-table';
 import { Drawer } from './ui/drawer';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 
 export const Sessions = observer(function SessionsList() {
   return (
@@ -17,7 +18,22 @@ export const Sessions = observer(function SessionsList() {
         </Drawer>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
-        {sessions.list.length ? <SessionsTable /> : <p>No records</p>}
+        {sessions.list.length ? (
+          <Tabs defaultValue="table">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="table">Table</TabsTrigger>
+              <TabsTrigger value="Calendar">Calendar</TabsTrigger>
+            </TabsList>
+            <TabsContent value="table">
+              <SessionsTable />
+            </TabsContent>
+            <TabsContent value="Calendar">
+              <p>Calendar</p>
+            </TabsContent>
+          </Tabs>
+        ) : (
+          <p>No records</p>
+        )}
       </CardContent>
     </Card>
   );
