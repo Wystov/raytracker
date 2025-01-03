@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { sessions } from '@/store/sessions';
 
 import { SessionDrawer } from './session-drawer';
+import { SessionsCalendar } from './sessions-calendar';
 import { SessionsTable } from './sessions-table';
 import { Drawer } from './ui/drawer';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
@@ -28,7 +29,7 @@ export const Sessions = observer(function SessionsList() {
               <SessionsTable />
             </TabsContent>
             <TabsContent value="Calendar">
-              <p>Calendar</p>
+              <SessionsCalendar />
             </TabsContent>
           </Tabs>
         ) : (

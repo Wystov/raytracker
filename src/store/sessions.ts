@@ -17,7 +17,7 @@ import { makeAutoObservable } from 'mobx';
 
 import { getLampAndBulbTimeChange } from '@/lib/get-lamp-and-bulb-time-change';
 import { dbRefs } from '@/services/firebase/store';
-import { SessionData, SessionDataWithId } from '@/types';
+import { NarrowedToDate, SessionData, SessionDataWithId } from '@/types';
 
 import { lamp } from './lamp';
 
@@ -184,6 +184,16 @@ class Sessions {
     this.setList(this.list.map((s) => (s.id === data.id ? data : s)));
 
     lamp.increaseTime(timeDiff, data.dateTime);
+  }
+
+  get listWithDates(): NarrowedToDate<SessionDataWithId>[] {
+    return this.list.map((session) => ({
+      ...session,
+      dateTime:
+        session.dateTime instanceof Date
+          ? session.dateTime
+          : session.dateTime.toDate(),
+    }));
   }
 }
 

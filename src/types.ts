@@ -45,3 +45,7 @@ export type DBRefs = {
   sessionsCollection?: CollectionReference;
   sessionDoc?: (sessionId: string) => DocumentReference;
 };
+
+export type NarrowedToDate<T> = {
+  [K in keyof T]: K extends 'dateTime' ? Date : T[K];
+};
