@@ -26,7 +26,7 @@ export const Sessions = observer(function SessionsList() {
               <TabsTrigger value="Calendar">Calendar</TabsTrigger>
             </TabsList>
             <TabsContent value="table">
-              <SessionsTable />
+              <SessionsTable data={sessions.listWithDates} mode="latest" />
             </TabsContent>
             <TabsContent value="Calendar">
               <SessionsCalendar />

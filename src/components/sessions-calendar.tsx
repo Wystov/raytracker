@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { sessions } from '@/store/sessions';
 import { NarrowedToDate, SessionDataWithId } from '@/types';
 
+import { SessionsTable } from './sessions-table';
 import { Calendar } from './ui/calendar';
-import { Separator } from './ui/separator';
 
 export const SessionsCalendar = observer(function SessionsCalendar() {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
@@ -51,18 +51,11 @@ export const SessionsCalendar = observer(function SessionsCalendar() {
       </div>
       {selectedDate && (
         <>
-          <Separator />
-          <ul>
-            {sessionsForSelectedDate.length ? (
-              sessionsForSelectedDate.map((session) => (
-                <li key={session.id}>
-                  {session.dateTime.toDateString()} {session.totalSessionTime}s
-                </li>
-              ))
-            ) : (
-              <p>No records for this day</p>
-            )}
-          </ul>
+          {sessionsForSelectedDate.length ? (
+            <SessionsTable data={sessionsForSelectedDate} mode="calendar" />
+          ) : (
+            <p className="text-center">No records for this day</p>
+          )}
         </>
       )}
     </div>

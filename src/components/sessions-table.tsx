@@ -3,6 +3,7 @@ import { observer } from 'mobx-react-lite';
 import { toHumanReadableTime } from '@/lib/human-readable-time';
 import { lamp } from '@/store/lamp';
 import { sessions } from '@/store/sessions';
+import { NarrowedToDate, SessionDataWithId } from '@/types';
 
 import { ActionsDropdown } from './actions-dropdown';
 import { Button } from './ui/button';
@@ -15,7 +16,15 @@ import {
   TableRow,
 } from './ui/table';
 
-export const SessionsTable = observer(function SessionsTable() {
+interface SessionsTableProps {
+  data: NarrowedToDate<SessionDataWithId>[];
+  mode: 'latest' | 'calendar';
+}
+
+export const SessionsTable = observer(function SessionsTable({
+  data,
+  mode,
+}: SessionsTableProps) {
   return (
     <>
       <Table>
@@ -29,17 +38,15 @@ export const SessionsTable = observer(function SessionsTable() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {sessions.list.map((session) => {
+          {data.map((session) => {
             const { dateTime, id } = session;
-            const date =
-              dateTime instanceof Date ? dateTime : dateTime.toDate();
 
-            const day = date.toLocaleDateString(undefined, {
+            const day = dateTime.toLocaleDateString(undefined, {
               year: 'numeric',
               month: 'short',
               day: 'numeric',
             });
-            const time = date.toLocaleTimeString(undefined, {
+            const time = dateTime.toLocaleTimeString(undefined, {
               hour12: false,
               hour: 'numeric',
               minute: 'numeric',
@@ -66,19 +73,22 @@ export const SessionsTable = observer(function SessionsTable() {
           })}
         </TableBody>
       </Table>
-      <div className="flex flex-col gap-4 justify-between items-center">
-        <span className="text-sm font-medium text-muted-foreground">
-          Showing {sessions.list.length} of {lamp.sessionsCount}
-        </span>
-        {sessions.list.length < lamp.sessionsCount && (
-          <Button
-            variant={'outline'}
-            onClick={() => sessions.getSessions('more')}
-          >
-            Load more
-          </Button>
-        )}
-      </div>
+
+      {mode === 'latest' && (
+        <div className="flex flex-col gap-4 justify-between items-center">
+          <span className="text-sm font-medium text-muted-foreground">
+            Showing {data.length} of {lamp.sessionsCount}
+          </span>
+          {data.length < lamp.sessionsCount && (
+            <Button
+              variant={'outline'}
+              onClick={() => sessions.getSessions('more')}
+            >
+              Load more
+            </Button>
+          )}
+        </div>
+      )}
     </>
   );
 });
