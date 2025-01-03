@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { sessions } from '@/store/sessions';
 import { NarrowedToDate, SessionDataWithId } from '@/types';
@@ -7,30 +7,24 @@ import { NarrowedToDate, SessionDataWithId } from '@/types';
 import { SessionsTable } from './sessions-table';
 import { Calendar } from './ui/calendar';
 
-export const SessionsCalendar = observer(function SessionsCalendar() {
+interface SessionsCalendarProps {
+  data: NarrowedToDate<SessionDataWithId>[];
+}
+
+export const SessionsCalendar = observer(function SessionsCalendar({
+  data,
+}: SessionsCalendarProps) {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
-  const [sessionsForSelectedDate, setSessionsForSelectedDate] = useState<
-    NarrowedToDate<SessionDataWithId>[]
-  >([]);
 
-  const handleDateSelect = (date: Date | undefined) => {
-    setSelectedDate(date);
-
-    if (!date) {
-      setSessionsForSelectedDate([]);
-      return;
-    }
-
-    const filteredRecords = sessions.listWithDates.filter((session) => {
-      return (
-        session.dateTime.getFullYear() === date.getFullYear() &&
-        session.dateTime.getMonth() === date.getMonth() &&
-        session.dateTime.getDate() === date.getDate()
-      );
-    });
-
-    setSessionsForSelectedDate(filteredRecords);
-  };
+  const sessionsForSelectedDate = useMemo(() => {
+    if (!selectedDate) return [];
+    return data.filter(
+      (session) =>
+        session.dateTime.getFullYear() === selectedDate.getFullYear() &&
+        session.dateTime.getMonth() === selectedDate.getMonth() &&
+        session.dateTime.getDate() === selectedDate.getDate()
+    );
+  }, [selectedDate, data]);
 
   return (
     <div className="flex flex-col gap-2">
@@ -43,7 +37,7 @@ export const SessionsCalendar = observer(function SessionsCalendar() {
             ),
           }}
           selected={selectedDate}
-          onSelect={handleDateSelect}
+          onSelect={setSelectedDate}
           modifiersClassNames={{
             datesWithSessions: 'bg-blue-500 text-white',
           }}
