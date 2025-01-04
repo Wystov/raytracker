@@ -14,7 +14,7 @@ export const App = observer(function App() {
     <ThemeProvider defaultTheme="system" storageKey="raytracker-theme">
       <Header />
       <main
-        className="flex flex-1 flex-col items-center w-full max-w-96 m-auto  p-2 py-6"
+        className="flex flex-1 flex-col items-center w-full max-w-96 m-auto  p-2 py-6 gap-2"
         data-vaul-drawer-wrapper
       >
         {user.initialized ? (
