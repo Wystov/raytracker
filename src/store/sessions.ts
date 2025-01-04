@@ -12,6 +12,7 @@ import {
   setDoc,
   startAfter,
   updateDoc,
+  where,
 } from 'firebase/firestore';
 import { makeAutoObservable } from 'mobx';
 
@@ -25,6 +26,7 @@ class Sessions {
   list = [] as SessionDataWithId[];
   itemsPerPage = 5;
   lastKey: QueryDocumentSnapshot<DocumentData> | null = null;
+  listByMonth = new Map<string, NarrowedToDate<SessionDataWithId>[]>();
 
   constructor() {
     makeAutoObservable(this);
@@ -79,6 +81,48 @@ class Sessions {
     );
 
     this.lastKey = res.docs[res.docs.length - 1];
+  }
+
+  async getSessionsForMonth(date: Date) {
+    const monthKey = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+
+    if (this.listByMonth.has(monthKey)) {
+      return this.listByMonth.get(monthKey)!;
+    }
+
+    const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+    const endOfMonth = new Date(
+      date.getFullYear(),
+      date.getMonth() + 1,
+      0,
+      23,
+      59,
+      59,
+      999
+    );
+
+    const res = await getDocs(
+      query(
+        dbRefs.sessionsCollection!,
+        where('dateTime', '>=', startOfMonth),
+        where('dateTime', '<=', endOfMonth)
+      )
+    );
+
+    const data = res.docs.map((doc) => {
+      const data = doc.data() as SessionDataWithId;
+      return {
+        ...data,
+        dateTime:
+          data.dateTime instanceof Date
+            ? data.dateTime
+            : data.dateTime.toDate(),
+      };
+    }) as NarrowedToDate<SessionDataWithId>[];
+
+    this.listByMonth.set(monthKey, data);
+
+    return data;
   }
 
   async addSession(session: SessionData) {
