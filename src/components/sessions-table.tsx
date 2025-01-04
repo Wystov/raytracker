@@ -54,7 +54,7 @@ export const SessionsTable = observer(function SessionsTable({
 
             return (
               <TableRow key={id}>
-                <TableCell className="font-medium">
+                <TableCell>
                   <p className="text-nowrap">{day}</p>
                   <p>{time}</p>
                 </TableCell>

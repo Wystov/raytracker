@@ -14,7 +14,7 @@ export const SessionDrawer = ({ type, id }: SessionDrawerProps) => {
     <>
       <DrawerTrigger asChild>
         {type === 'add' && (
-          <Button className="self-center">
+          <Button className="self-start">
             <CalendarPlus />
             Add
           </Button>

@@ -18,7 +18,7 @@ export const Account = observer(function Account() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant={'ghost'} size={'icon'}>
+        <Button variant={'ghost'} size={'icon-lg'}>
           <User />
         </Button>
       </SheetTrigger>

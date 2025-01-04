@@ -21,8 +21,8 @@ import { Separator } from './ui/separator';
 export const Lamp = observer(function Lamp() {
   return (
     <Card className="w-full mb-2">
-      <CardHeader>
-        <CardTitle>Your lamp</CardTitle>
+      <CardHeader className="pb-3">
+        <CardTitle>Device</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
         {lamp.exists ? (
@@ -63,7 +63,7 @@ export const Lamp = observer(function Lamp() {
             <CollapsibleTrigger asChild>
               <Button
                 variant="ghost"
-                size="icon"
+                size="icon-lg"
                 className="self-center hover:bg-transparent hover:opacity-50 transition-all transform-gpu data-[state=closed]:rotate-0 data-[state=open]:rotate-180"
               >
                 <ChevronDown className="w-20" />

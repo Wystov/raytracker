@@ -20,12 +20,12 @@ export const Sessions = observer(function SessionsList() {
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
         {sessions.list.length ? (
-          <Tabs defaultValue="table">
+          <Tabs defaultValue="latest">
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="table">Table</TabsTrigger>
+              <TabsTrigger value="latest">Latest</TabsTrigger>
               <TabsTrigger value="Calendar">Calendar</TabsTrigger>
             </TabsList>
-            <TabsContent value="table">
+            <TabsContent value="latest">
               <SessionsTable data={sessions.listWithDates} mode="latest" />
             </TabsContent>
             <TabsContent value="Calendar">
