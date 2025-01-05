@@ -75,7 +75,7 @@ export const SessionsTable = observer(function SessionsTable({
       </Table>
 
       {mode === 'latest' && (
-        <div className="flex flex-col gap-4 justify-between items-center">
+        <div className="flex flex-col gap-4 justify-between items-center mt-2">
           <span className="text-sm font-medium text-muted-foreground">
             Showing {data.length} of {lamp.sessionsCount}
           </span>
