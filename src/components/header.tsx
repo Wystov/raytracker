@@ -15,7 +15,7 @@ export const Header = () => {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex justify-between items-center w-full max-w-96 m-auto p-2">
-        <a href="/" className="font-black tracking-wider text-xl">
+        <a href="/" className="font-extrabold tracking-wider text-xl">
           <span className="text-primary">Ray</span>Tracker
         </a>
         <div className="flex gap-1">
