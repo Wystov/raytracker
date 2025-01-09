@@ -45,6 +45,7 @@ class Sessions {
 
   reset() {
     this.setList([]);
+    this.listByMonth.clear();
   }
 
   setList(list: SessionDataWithId[]) {
