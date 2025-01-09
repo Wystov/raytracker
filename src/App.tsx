@@ -7,6 +7,7 @@ import { user } from '@/store/user';
 import { Header } from './components/header';
 import { Sessions } from './components/sessions';
 import { ThemeProvider } from './components/theme-provider';
+import { Loader } from './components/ui/loader';
 import { lamp } from './store/lamp';
 
 export const App = observer(function App() {
@@ -23,7 +24,7 @@ export const App = observer(function App() {
             {user.data?.profile && lamp.exists && <Sessions />}
           </>
         ) : (
-          <div>Loading...</div>
+          <Loader />
         )}
       </main>
     </ThemeProvider>
