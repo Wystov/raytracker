@@ -37,6 +37,7 @@ export const SessionsCalendar = observer(function SessionsCalendar() {
       <div className="max-w-fit mx-auto">
         <Calendar
           mode={'single'}
+          showOutsideDays={false}
           modifiers={{
             datesWithSessions: data.map((session) => session.dateTime),
           }}
@@ -44,16 +45,35 @@ export const SessionsCalendar = observer(function SessionsCalendar() {
           onSelect={setSelectedDate}
           onMonthChange={setShowMonth}
           modifiersClassNames={{
-            datesWithSessions: 'bg-blue-500 text-white rounded-3xl',
+            datesWithSessions: 'bg-primary text-foreground rounded-3xl',
           }}
+          className="rounded-xl border shadow"
         />
       </div>
+      {!selectedDate && (
+        <p className="text-center">Select a day to view sessions</p>
+      )}
       {selectedDate && (
         <>
           {sessionsForSelectedDate.length ? (
-            <SessionsTable data={sessionsForSelectedDate} mode="calendar" />
+            <>
+              <p className="text-center">
+                Sessions for{' '}
+                {selectedDate.toLocaleDateString(undefined, {
+                  day: 'numeric',
+                  month: 'long',
+                })}
+              </p>
+              <SessionsTable data={sessionsForSelectedDate} mode="calendar" />
+            </>
           ) : (
-            <p className="text-center">No records for this day</p>
+            <p className="text-center">
+              No sessions for{' '}
+              {selectedDate.toLocaleDateString(undefined, {
+                day: 'numeric',
+                month: 'long',
+              })}
+            </p>
           )}
         </>
       )}

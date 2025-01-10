@@ -30,8 +30,10 @@ export const SessionsTable = observer(function SessionsTable({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="text-start">Date</TableHead>
-            <TableHead className="text-center">Time</TableHead>
+            <TableHead className="text-start">
+              {mode === 'latest' ? 'Date' : 'Time'}
+            </TableHead>
+            <TableHead className="text-center">Duration</TableHead>
             <TableHead className="text-center">Uses</TableHead>
             <TableHead className="text-center">Total</TableHead>
             <TableHead className="w-0"></TableHead>
@@ -55,7 +57,7 @@ export const SessionsTable = observer(function SessionsTable({
             return (
               <TableRow key={id}>
                 <TableCell>
-                  <p className="text-nowrap">{day}</p>
+                  {mode === 'latest' && <p className="text-nowrap">{day}</p>}
                   <p>{time}</p>
                 </TableCell>
                 <TableCell className="text-center">

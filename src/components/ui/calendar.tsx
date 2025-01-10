@@ -36,7 +36,7 @@ const Calendar = ({
           'text-muted-foreground rounded-md w-8 font-normal text-[0.8rem]',
         row: 'flex w-full mt-2',
         cell: cn(
-          'relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-accent [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected].day-range-end)]:rounded-r-md',
+          'w-[32px] relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-primary [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected].day-range-end)]:rounded-r-md',
           props.mode === 'range'
             ? '[&:has(>.day-range-end)]:rounded-r-md [&:has(>.day-range-start)]:rounded-l-md first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md'
             : '[&:has([aria-selected])]:rounded-md'
@@ -48,8 +48,8 @@ const Calendar = ({
         day_range_start: 'day-range-start',
         day_range_end: 'day-range-end',
         day_selected:
-          'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground',
-        day_today: 'bg-accent text-accent-foreground',
+          'bg-foreground text-background focus:bg-foreground focus:text-background',
+        day_today: 'bg-accent/50 text-accent-foreground',
         day_outside:
           'day-outside text-muted-foreground aria-selected:bg-accent/50 aria-selected:text-muted-foreground',
         day_disabled: 'text-muted-foreground opacity-50',
