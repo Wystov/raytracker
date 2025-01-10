@@ -15,6 +15,7 @@ export default defineConfig({
         short_name: 'RayTracker',
         description: 'App for tracking your UVB lamp sessions',
         theme_color: '#020817',
+        background_color: '#020817',
         icons: [
           {
             src: 'pwa-64x64.png',
@@ -33,7 +34,7 @@ export default defineConfig({
             purpose: 'any',
           },
           {
-            src: 'maskable-icon-512x512.png',
+            src: 'pwa-512x512.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'maskable',
