@@ -7,6 +7,7 @@ import { SessionDrawer } from './session-drawer';
 import { SessionsCalendar } from './sessions-calendar';
 import { SessionsTable } from './sessions-table';
 import { Drawer } from './ui/drawer';
+import { Loader } from './ui/loader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 
 export const Sessions = observer(function SessionsList() {
@@ -19,7 +20,10 @@ export const Sessions = observer(function SessionsList() {
         </Drawer>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
-        {sessions.list.length ? (
+        {!sessions.isFetching && sessions.list.length === 0 && (
+          <p>No records</p>
+        )}
+        {sessions.list.length > 0 && (
           <Tabs defaultValue="latest">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="latest">Latest</TabsTrigger>
@@ -32,9 +36,8 @@ export const Sessions = observer(function SessionsList() {
               <SessionsCalendar />
             </TabsContent>
           </Tabs>
-        ) : (
-          <p>No records</p>
         )}
+        {sessions.isFetching && <Loader />}
       </CardContent>
     </Card>
   );

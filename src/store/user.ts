@@ -6,7 +6,7 @@ import { db, dbRefs } from '@/services/firebase/store';
 import { UserData } from '@/types';
 
 class User {
-  initialized: boolean = false;
+  isLoading: boolean = true;
   data: UserData | null = null;
 
   constructor() {
@@ -17,8 +17,8 @@ class User {
     return this.data?.lampList.at(-1);
   }
 
-  setInitialized() {
-    this.initialized = true;
+  setIsLoading(isLoading: boolean) {
+    this.isLoading = isLoading;
   }
 
   setData(data: UserData) {

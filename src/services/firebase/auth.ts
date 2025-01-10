@@ -18,8 +18,13 @@ export const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
 export const signInWithGoogle = async () => {
-  const { user: UserData } = await signInWithPopup(auth, provider);
-  user.setUser(UserData);
+  user.setIsLoading(true);
+  try {
+    await signInWithPopup(auth, provider);
+  } catch (error) {
+    console.error(error);
+    user.setIsLoading(false);
+  }
 };
 
 export const signOutUser = () => {
@@ -27,16 +32,23 @@ export const signOutUser = () => {
 };
 
 onAuthStateChanged(auth, async (data) => {
-  await user.setUser(data);
-  user.setInitialized();
-  if (!data?.uid) {
-    setDbRefs({ reset: true });
-    lamp.reset();
-    sessions.reset();
-    return;
-  }
+  user.setIsLoading(true);
 
-  setDbRefs({ uid: data.uid, lampId: runInAction(() => user.lampId) });
-  await lamp.getLamp();
-  sessions.getSessions();
+  try {
+    await user.setUser(data);
+    if (!data?.uid) {
+      setDbRefs({ reset: true });
+      lamp.reset();
+      sessions.reset();
+      return;
+    }
+
+    setDbRefs({ uid: data.uid, lampId: runInAction(() => user.lampId) });
+    await lamp.getLamp();
+    sessions.getSessions();
+  } catch (error) {
+    console.error(error);
+  } finally {
+    user.setIsLoading(false);
+  }
 });

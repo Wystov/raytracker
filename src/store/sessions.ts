@@ -27,6 +27,7 @@ class Sessions {
   itemsPerPage = 5;
   lastKey: QueryDocumentSnapshot<DocumentData> | null = null;
   listByMonth = new Map<string, NarrowedToDate<SessionDataWithId>[]>();
+  isFetching = false;
 
   constructor() {
     makeAutoObservable(this);
@@ -61,10 +62,14 @@ class Sessions {
   }
 
   async getSessions(load: 'more' | 'init' = 'init') {
+    if (this.isFetching) return;
+
     if (!dbRefs.sessionsCollection) {
       console.error('db ref for sessions collection is not set');
       return;
     }
+
+    this.isFetching = true;
 
     const constraints: QueryConstraint[] = [
       orderBy('dateTime', 'desc'),
@@ -75,13 +80,21 @@ class Sessions {
       constraints.push(startAfter(this.lastKey));
     }
 
-    const res = await getDocs(query(dbRefs.sessionsCollection, ...constraints));
+    try {
+      const res = await getDocs(
+        query(dbRefs.sessionsCollection, ...constraints)
+      );
 
-    res.forEach((session) =>
-      this.addToList(session.data() as SessionDataWithId)
-    );
+      res.forEach((session) =>
+        this.addToList(session.data() as SessionDataWithId)
+      );
 
-    this.lastKey = res.docs[res.docs.length - 1];
+      this.lastKey = res.docs[res.docs.length - 1];
+    } catch (error) {
+      console.error(error);
+    } finally {
+      this.isFetching = false;
+    }
   }
 
   async getSessionsForMonth(date: Date) {

@@ -79,7 +79,7 @@ export const SessionsTable = observer(function SessionsTable({
           <span className="text-sm font-medium text-muted-foreground">
             Showing {data.length} of {lamp.sessionsCount}
           </span>
-          {data.length < lamp.sessionsCount && (
+          {!sessions.isFetching && data.length < lamp.sessionsCount && (
             <Button
               variant={'outline'}
               onClick={() => sessions.getSessions('more')}

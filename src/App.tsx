@@ -18,7 +18,7 @@ export const App = observer(function App() {
         className="flex flex-1 flex-col items-center w-full max-w-96 m-auto  p-2 py-6 gap-2"
         data-vaul-drawer-wrapper
       >
-        {user.initialized ? (
+        {!user.isLoading ? (
           <>
             {!user.data?.profile ? <Login /> : <Lamp />}
             {user.data?.profile && lamp.exists && <Sessions />}

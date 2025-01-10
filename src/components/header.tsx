@@ -9,8 +9,8 @@ import { Button } from './ui/button';
 
 /* eslint-disable mobx/missing-observer */
 export const Header = () => {
-  const showLoginBtn = user.initialized && !user.data?.profile;
-  const showAccountBtn = user.initialized && user.data?.profile;
+  const showLoginBtn = !user.isLoading && !user.data?.profile;
+  const showAccountBtn = !user.isLoading && user.data?.profile;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
