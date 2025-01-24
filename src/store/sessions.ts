@@ -17,13 +17,14 @@ import {
 import { makeAutoObservable } from 'mobx';
 
 import { getLampAndBulbTimeChange } from '@/lib/get-lamp-and-bulb-time-change';
+import { getListWithDates } from '@/lib/get-list-with-dates';
 import { dbRefs } from '@/services/firebase/store';
 import { NarrowedToDate, SessionData, SessionDataWithId } from '@/types';
 
 import { lamp } from './lamp';
 
 class Sessions {
-  list = [] as SessionDataWithId[];
+  listData = [] as SessionDataWithId[];
   itemsPerPage = 5;
   lastKey: QueryDocumentSnapshot<DocumentData> | null = null;
   listByMonth = new Map<string, NarrowedToDate<SessionDataWithId>[]>();
@@ -31,6 +32,10 @@ class Sessions {
 
   constructor() {
     makeAutoObservable(this);
+  }
+
+  get list() {
+    return getListWithDates(this.listData);
   }
 
   async delete() {
@@ -50,15 +55,15 @@ class Sessions {
   }
 
   setList(list: SessionDataWithId[]) {
-    this.list = list;
+    this.listData = list;
   }
 
   addToList(session: SessionDataWithId) {
-    this.list.push(session);
+    this.listData.push(session);
   }
 
   removeFromList(sessionId: string) {
-    this.list = this.list.filter((session) => session.id !== sessionId);
+    this.listData = this.listData.filter((session) => session.id !== sessionId);
   }
 
   async getSessions(load: 'more' | 'init' = 'init') {
@@ -164,7 +169,7 @@ class Sessions {
       sessionsCount: increment(1),
     });
 
-    this.list.unshift(sessionDataWithId);
+    this.listData.unshift(sessionDataWithId);
 
     lamp.increaseSessionsCount();
     lamp.increaseTime(session.totalSessionTime, session.dateTime);
@@ -182,7 +187,7 @@ class Sessions {
       return;
     }
 
-    const session = this.list.find((session) => session.id === sessionId);
+    const session = this.listData.find((session) => session.id === sessionId);
 
     if (!session) {
       console.error('no session found');
@@ -222,7 +227,7 @@ class Sessions {
       return;
     }
 
-    const oldSession = this.list.find((s) => s.id === data.id);
+    const oldSession = this.listData.find((s) => s.id === data.id);
     if (!oldSession) {
       console.error('no old session found');
       return;
@@ -239,19 +244,13 @@ class Sessions {
     );
 
     await updateDoc(dbRefs.lampDoc, lampData);
-    this.setList(this.list.map((s) => (s.id === data.id ? data : s)));
+    this.setList(this.listData.map((s) => (s.id === data.id ? data : s)));
 
     lamp.increaseTime(timeDiff, data.dateTime);
   }
 
   get listWithDates(): NarrowedToDate<SessionDataWithId>[] {
-    return this.list.map((session) => ({
-      ...session,
-      dateTime:
-        session.dateTime instanceof Date
-          ? session.dateTime
-          : session.dateTime.toDate(),
-    }));
+    return getListWithDates(this.listData);
   }
 }
 

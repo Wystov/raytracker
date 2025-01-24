@@ -56,8 +56,7 @@ export const SessionInputForm = observer(function SessionInputForm({
       ? sessions.list[0]
       : sessions.list.find((s) => s.id === editSessionId);
 
-  let date = type === 'add' ? new Date() : session?.dateTime;
-  if (!(date instanceof Date)) date = date?.toDate();
+  const date = type === 'add' ? new Date() : session?.dateTime;
 
   const defaultUses = session?.uses ?? 1;
   const defaultUseDuration = session?.timeInSeconds ?? 30;
