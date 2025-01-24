@@ -1,12 +1,11 @@
 import { NarrowedToDate, SessionDataWithId } from '@/types';
 
+import { timestampToDate } from './timestamp-to-date';
+
 export const getListWithDates = (
   list: SessionDataWithId[]
 ): NarrowedToDate<SessionDataWithId>[] =>
   list.map((session) => ({
     ...session,
-    dateTime:
-      session.dateTime instanceof Date
-        ? session.dateTime
-        : session.dateTime.toDate(),
+    dateTime: timestampToDate(session.dateTime),
   }));

@@ -14,10 +14,12 @@ import {
   updateDoc,
   where,
 } from 'firebase/firestore';
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, observable } from 'mobx';
 
 import { getLampAndBulbTimeChange } from '@/lib/get-lamp-and-bulb-time-change';
 import { getListWithDates } from '@/lib/get-list-with-dates';
+import { getYYYYMMKey } from '@/lib/get-YYYY-MM-key';
+import { timestampToDate } from '@/lib/timestamp-to-date';
 import { dbRefs } from '@/services/firebase/store';
 import { NarrowedToDate, SessionData, SessionDataWithId } from '@/types';
 
@@ -27,8 +29,9 @@ class Sessions {
   listData = [] as SessionDataWithId[];
   itemsPerPage = 5;
   lastKey: QueryDocumentSnapshot<DocumentData> | null = null;
-  listByMonth = new Map<string, NarrowedToDate<SessionDataWithId>[]>();
+  listByMonth = observable.map<string, NarrowedToDate<SessionDataWithId>[]>();
   isFetching = false;
+  isMonthDataFetching = false;
 
   constructor() {
     makeAutoObservable(this);
@@ -62,10 +65,30 @@ class Sessions {
 
   addToList(session: SessionDataWithId) {
     this.listData.push(session);
+    const monthKey = getYYYYMMKey(timestampToDate(session.dateTime));
+    if (!this.listByMonth.has(monthKey)) {
+      this.listByMonth.set(monthKey, []);
+    }
+    this.listByMonth.get(monthKey)!.push({
+      ...session,
+      dateTime: timestampToDate(session.dateTime),
+    });
   }
 
   removeFromList(sessionId: string) {
+    const date = this.listData.find((s) => s.id === sessionId)?.dateTime;
+
     this.listData = this.listData.filter((session) => session.id !== sessionId);
+
+    if (!date) return;
+    const monthKey = getYYYYMMKey(timestampToDate(date));
+    if (this.listByMonth.has(monthKey))
+      this.listByMonth.set(
+        monthKey,
+        this.listByMonth.get(monthKey)!.filter((s) => s.id !== sessionId)
+      );
+    if (this.listByMonth.get(monthKey)?.length === 0)
+      this.listByMonth.delete(monthKey);
   }
 
   async getSessions(load: 'more' | 'init' = 'init') {
@@ -105,11 +128,13 @@ class Sessions {
   }
 
   async getSessionsForMonth(date: Date) {
-    const monthKey = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+    const monthKey = getYYYYMMKey(date);
 
     if (this.listByMonth.has(monthKey)) {
       return this.listByMonth.get(monthKey)!;
     }
+
+    if (this.isMonthDataFetching) return;
 
     const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
     const endOfMonth = new Date(
@@ -122,28 +147,34 @@ class Sessions {
       999
     );
 
-    const res = await getDocs(
-      query(
-        dbRefs.sessionsCollection!,
-        where('dateTime', '>=', startOfMonth),
-        where('dateTime', '<=', endOfMonth)
-      )
-    );
+    try {
+      this.isMonthDataFetching = true;
 
-    const data = res.docs.map((doc) => {
-      const data = doc.data() as SessionDataWithId;
-      return {
-        ...data,
-        dateTime:
-          data.dateTime instanceof Date
-            ? data.dateTime
-            : data.dateTime.toDate(),
-      };
-    }) as NarrowedToDate<SessionDataWithId>[];
+      const res = await getDocs(
+        query(
+          dbRefs.sessionsCollection!,
+          where('dateTime', '>=', startOfMonth),
+          where('dateTime', '<=', endOfMonth)
+        )
+      );
 
-    this.listByMonth.set(monthKey, data);
+      const data = res.docs.map((doc) => {
+        const data = doc.data() as SessionDataWithId;
+        return {
+          ...data,
+          dateTime:
+            data.dateTime instanceof Date
+              ? data.dateTime
+              : data.dateTime.toDate(),
+        };
+      }) as NarrowedToDate<SessionDataWithId>[];
 
-    return data;
+      this.listByMonth.set(monthKey, data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      this.isMonthDataFetching = false;
+    }
   }
 
   async addSession(session: SessionData) {

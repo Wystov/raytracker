@@ -1,49 +1,57 @@
 import { observer } from 'mobx-react-lite';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
+import { Loader } from '@/components/ui/loader';
+import { getYYYYMMKey } from '@/lib/get-YYYY-MM-key';
 import { sessions } from '@/store/sessions';
-import { NarrowedToDate, SessionDataWithId } from '@/types';
 
 import { SessionsTable } from './sessions-table';
 import { Calendar } from './ui/calendar';
 
 export const SessionsCalendar = observer(function SessionsCalendar() {
   const [showMonth, setShowMonth] = useState(new Date());
-  const [data, setData] = useState<NarrowedToDate<SessionDataWithId>[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+  const { listByMonth } = sessions;
 
   useEffect(() => {
-    const fetchSessions = async (date: Date) => {
-      const fetchedSessions = await sessions.getSessionsForMonth(date);
-      setData(fetchedSessions);
-    };
+    sessions.getSessionsForMonth(showMonth);
+  }, [showMonth, listByMonth]);
 
-    fetchSessions(showMonth);
-  }, [showMonth]);
+  const onMonthChange = (date: Date) => {
+    setSelectedDate(undefined);
+    setShowMonth(date);
+  };
 
-  const sessionsForSelectedDate = useMemo(() => {
-    if (!selectedDate) return [];
+  const sessionsForMonth = listByMonth.get(getYYYYMMKey(showMonth)) ?? [];
 
-    return data.filter(
-      (session) =>
-        session.dateTime.getFullYear() === selectedDate.getFullYear() &&
-        session.dateTime.getMonth() === selectedDate.getMonth() &&
-        session.dateTime.getDate() === selectedDate.getDate()
-    );
-  }, [selectedDate, data]);
+  const sessionsForSelectedDate = selectedDate
+    ? sessionsForMonth.filter(
+        (session) =>
+          session.dateTime.getFullYear() === selectedDate.getFullYear() &&
+          session.dateTime.getMonth() === selectedDate.getMonth() &&
+          session.dateTime.getDate() === selectedDate.getDate()
+      )
+    : [];
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 relative">
+      {sessions.isMonthDataFetching && (
+        <div className="absolute bg-background/50 z-50 top-0 left-0 right-0 bottom-0 flex items-center justify-center">
+          <Loader />
+        </div>
+      )}
       <div className="max-w-fit mx-auto">
         <Calendar
           mode={'single'}
           showOutsideDays={false}
           modifiers={{
-            datesWithSessions: data.map((session) => session.dateTime),
+            datesWithSessions: sessionsForMonth.map(
+              (session) => session.dateTime
+            ),
           }}
           selected={selectedDate}
           onSelect={setSelectedDate}
-          onMonthChange={setShowMonth}
+          onMonthChange={onMonthChange}
           modifiersClassNames={{
             datesWithSessions: 'bg-primary text-foreground rounded-3xl',
           }}
