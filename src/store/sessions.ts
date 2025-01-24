@@ -35,7 +35,9 @@ class Sessions {
   }
 
   get list() {
-    return getListWithDates(this.listData);
+    return getListWithDates(this.listData).sort(
+      (a, b) => b.dateTime.getTime() - a.dateTime.getTime()
+    );
   }
 
   async delete() {
@@ -169,7 +171,7 @@ class Sessions {
       sessionsCount: increment(1),
     });
 
-    this.listData.unshift(sessionDataWithId);
+    this.addToList(sessionDataWithId);
 
     lamp.increaseSessionsCount();
     lamp.increaseTime(session.totalSessionTime, session.dateTime);
@@ -247,10 +249,6 @@ class Sessions {
     this.setList(this.listData.map((s) => (s.id === data.id ? data : s)));
 
     lamp.increaseTime(timeDiff, data.dateTime);
-  }
-
-  get listWithDates(): NarrowedToDate<SessionDataWithId>[] {
-    return getListWithDates(this.listData);
   }
 }
 
