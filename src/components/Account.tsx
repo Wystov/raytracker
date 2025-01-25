@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetFooter,
   SheetHeader,
   SheetTitle,
@@ -25,6 +26,7 @@ export const Account = observer(function Account() {
         <SheetHeader>
           <SheetTitle>Account</SheetTitle>
         </SheetHeader>
+        <SheetDescription />
         <div className="flex flex-col items-start gap-2 py-4">
           <div>User: {user.data?.profile.displayName}</div>
         </div>
