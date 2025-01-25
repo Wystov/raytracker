@@ -10,6 +10,7 @@ export const Loader = () => {
           r="10"
           stroke="currentColor"
           strokeWidth="4"
+          fill="none"
         ></circle>
         <path
           className="opacity-7 fill-primary"

@@ -1,7 +1,7 @@
 /* eslint-disable mobx/missing-observer */
+import { ThemeProvider } from '@/components/actions/ThemeProvider';
 import { Header } from '@/components/Header';
 import { MainContent } from '@/components/MainContent';
-import { ThemeProvider } from '@/components/actions/ThemeProvider';
 
 export const App = () => {
   return (
