@@ -1,8 +1,8 @@
 import { observer } from 'mobx-react-lite';
 
-import { SessionDrawer } from '@/components/session-drawer';
-import { SessionsCalendar } from '@/components/sessions-calendar';
-import { SessionsTable } from '@/components/sessions-table';
+import { SessionDrawer } from '@/components/Sessions/SessionDrawer/session-drawer';
+import { SessionsCalendar } from '@/components/Sessions/sessions-calendar';
+import { SessionsTable } from '@/components/Sessions/SessionsTable/sessions-table';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Drawer } from '@/components/ui/drawer';
 import { Loader } from '@/components/ui/loader';
