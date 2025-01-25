@@ -1,10 +1,7 @@
 import { User } from 'lucide-react';
 import { observer } from 'mobx-react-lite';
 
-import { signOutUser } from '@/services/firebase/auth';
-import { user } from '@/store/user';
-
-import { Button } from './ui/button';
+import { Button } from '@/components/ui/button';
 import {
   Sheet,
   SheetContent,
@@ -12,7 +9,9 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from './ui/sheet';
+} from '@/components/ui/sheet';
+import { signOutUser } from '@/services/firebase/auth';
+import { user } from '@/store/user';
 
 export const Account = observer(function Account() {
   return (
@@ -30,7 +29,7 @@ export const Account = observer(function Account() {
           <div>User: {user.data?.profile.displayName}</div>
         </div>
         <SheetFooter className="items-start">
-          <Button variant={'outline'} onClick={() => signOutUser()}>
+          <Button variant={'outline'} onClick={signOutUser}>
             Sign out
           </Button>
         </SheetFooter>
