@@ -65,14 +65,6 @@ class Sessions {
 
   addToList(session: SessionDataWithId) {
     this.listData.push(session);
-    const monthKey = getYYYYMMKey(timestampToDate(session.dateTime));
-    if (!this.listByMonth.has(monthKey)) {
-      this.listByMonth.set(monthKey, []);
-    }
-    this.listByMonth.get(monthKey)!.push({
-      ...session,
-      dateTime: timestampToDate(session.dateTime),
-    });
   }
 
   removeFromList(sessionId: string) {
@@ -129,7 +121,6 @@ class Sessions {
 
   async getSessionsForMonth(date: Date) {
     const monthKey = getYYYYMMKey(date);
-
     if (this.listByMonth.has(monthKey)) {
       return this.listByMonth.get(monthKey)!;
     }
@@ -170,6 +161,11 @@ class Sessions {
       }) as NarrowedToDate<SessionDataWithId>[];
 
       this.listByMonth.set(monthKey, data);
+
+      for (const session of data) {
+        if (!this.listData.find((s) => s.id === session.id))
+          this.addToList(session);
+      }
     } catch (error) {
       console.error(error);
     } finally {
@@ -203,6 +199,15 @@ class Sessions {
     });
 
     this.addToList(sessionDataWithId);
+
+    const monthKey = getYYYYMMKey(timestampToDate(sessionDataWithId.dateTime));
+    if (!this.listByMonth.has(monthKey)) {
+      this.listByMonth.set(monthKey, []);
+    }
+    this.listByMonth.get(monthKey)!.push({
+      ...sessionDataWithId,
+      dateTime: timestampToDate(sessionDataWithId.dateTime),
+    });
 
     lamp.increaseSessionsCount();
     lamp.increaseTime(session.totalSessionTime, session.dateTime);
