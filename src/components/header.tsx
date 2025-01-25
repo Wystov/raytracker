@@ -1,12 +1,11 @@
 import { LogIn } from 'lucide-react';
 import { observer } from 'mobx-react-lite';
 
+import { Account } from '@/components/account';
+import { ThemeToggle } from '@/components/theme-toggle';
+import { Button } from '@/components/ui/button';
 import { signInWithGoogle } from '@/services/firebase/auth';
 import { user } from '@/store/user';
-
-import { Account } from './account';
-import { ThemeToggle } from './theme-toggle';
-import { Button } from './ui/button';
 
 export const Header = observer(function Header() {
   const { isLoading, data } = user;

@@ -4,10 +4,8 @@ import { observer } from 'mobx-react-lite';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { LampFormFields } from '@/components/Lamp/LampDrawer/lamp-form-fields';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { lamp } from '@/store/lamp';
-
 import {
   DrawerClose,
   DrawerContent,
@@ -16,9 +14,9 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from './ui/drawer';
-import { Form, FormControl, FormField, FormItem, FormLabel } from './ui/form';
-import { NumberInput } from './ui/number-input';
+} from '@/components/ui/drawer';
+import { Form } from '@/components/ui/form';
+import { lamp } from '@/store/lamp';
 
 const formSchema = z.object({
   lampName: z.string().min(1),
@@ -26,7 +24,7 @@ const formSchema = z.object({
   lampToChangeTime: z.number().min(10),
 });
 
-type FormSchemaType = z.infer<typeof formSchema>;
+export type LampFormSchemaType = z.infer<typeof formSchema>;
 
 export interface LampDrawerProps {
   type: 'add' | 'edit';
@@ -42,7 +40,7 @@ export const LampDrawer = observer(function LampDrawer({
     lampToChangeTime: type === 'add' ? 1000 : bulbLifetime,
   };
 
-  const form = useForm<FormSchemaType>({
+  const form = useForm<LampFormSchemaType>({
     resolver: zodResolver(formSchema),
     defaultValues,
   });
@@ -57,7 +55,7 @@ export const LampDrawer = observer(function LampDrawer({
     lampName,
     lampInitTime,
     lampToChangeTime,
-  }: FormSchemaType) => {
+  }: LampFormSchemaType) => {
     if (type === 'add') lamp.addLamp(lampName, lampInitTime, lampToChangeTime);
     if (type === 'edit')
       lamp.editLamp(lampName, lampInitTime, lampToChangeTime);
@@ -83,62 +81,7 @@ export const LampDrawer = observer(function LampDrawer({
               className="flex flex-col"
               onSubmit={form.handleSubmit(onSubmit)}
             >
-              <div className="flex flex-col gap-2 px-4 mb-4">
-                <FormField
-                  control={form.control}
-                  name="lampName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Lamp name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Lamp name" {...field} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="lampInitTime"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Initial time</FormLabel>
-                      <div className="flex gap-2 items-center">
-                        <FormControl>
-                          <NumberInput
-                            value={field.value}
-                            setValue={field.onChange}
-                            maxLength={4}
-                            min={0}
-                            max={9999}
-                          />
-                        </FormControl>
-                        <span>hours</span>
-                      </div>
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="lampToChangeTime"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Lamp change after</FormLabel>
-                      <div className="flex gap-2 items-center">
-                        <FormControl>
-                          <NumberInput
-                            value={field.value}
-                            setValue={field.onChange}
-                            maxLength={4}
-                            min={1}
-                            max={9999}
-                          />
-                        </FormControl>
-                        <span>hours</span>
-                      </div>
-                    </FormItem>
-                  )}
-                />
-              </div>
+              <LampFormFields form={form} />
               <DrawerFooter className="flex-row gap-2 py-0 mb-12">
                 <DrawerClose asChild>
                   <Button variant={'outline'} className="flex-1">

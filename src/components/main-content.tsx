@@ -1,12 +1,11 @@
 import { observer } from 'mobx-react-lite';
 
-import { Lamp } from '@/components/lamp';
+import { Lamp } from '@/components/Lamp/lamp';
+import { Login } from '@/components/login';
+import { Sessions } from '@/components/sessions';
 import { Loader } from '@/components/ui/loader';
 import { lamp } from '@/store/lamp';
 import { user } from '@/store/user';
-
-import { Login } from './login';
-import { Sessions } from './sessions';
 
 export const MainContent = observer(function MainContent() {
   if (user.isLoading) {

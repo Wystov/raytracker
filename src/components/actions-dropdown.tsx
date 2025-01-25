@@ -6,7 +6,7 @@ import { EllipsisVertical, Pencil, Trash2 } from 'lucide-react';
 import { lamp } from '@/store/lamp';
 import { sessions } from '@/store/sessions';
 
-import { LampDrawer, LampDrawerProps } from './lamp-drawer';
+import { LampDrawer, LampDrawerProps } from './Lamp/LampDrawer/lamp-drawer';
 import { RemoveWithConfirmation } from './remove-with-confirmation';
 import { SessionDrawer, SessionDrawerProps } from './session-drawer';
 import { AlertDialogTrigger } from './ui/alert-dialog';

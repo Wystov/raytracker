@@ -1,9 +1,8 @@
 /* eslint-disable mobx/missing-observer */
 
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { signInWithGoogle } from '@/services/firebase/auth';
-
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 
 export const Login = () => {
   return (
