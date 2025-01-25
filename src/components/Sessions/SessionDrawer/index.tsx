@@ -1,9 +1,9 @@
 /* eslint-disable mobx/missing-observer */
 import { CalendarPlus } from 'lucide-react';
 
-import { SessionInputForm } from './session-input-form.tsx';
-import { Button } from './ui/button';
-import { DrawerContent, DrawerTrigger } from './ui/drawer';
+import { SessionInputForm } from '@/components/Sessions/SessionDrawer/SessionsInputForm';
+import { Button } from '@/components/ui/button';
+import { DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
 
 export interface SessionDrawerProps {
   type: 'add' | 'edit';
@@ -12,14 +12,14 @@ export interface SessionDrawerProps {
 export const SessionDrawer = ({ type, id }: SessionDrawerProps) => {
   return (
     <>
-      <DrawerTrigger asChild>
-        {type === 'add' && (
+      {type === 'add' && (
+        <DrawerTrigger asChild>
           <Button className="self-start">
             <CalendarPlus />
             Add
           </Button>
-        )}
-      </DrawerTrigger>
+        </DrawerTrigger>
+      )}
       <DrawerContent>
         <SessionInputForm type={type} editSessionId={id} />
       </DrawerContent>

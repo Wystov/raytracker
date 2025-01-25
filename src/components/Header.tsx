@@ -1,16 +1,17 @@
 import { LogIn } from 'lucide-react';
+import { observer } from 'mobx-react-lite';
 
+import { Account } from '@/components/Account';
+import { ThemeToggle } from '@/components/actions/ThemeToggle';
+import { Button } from '@/components/ui/button';
 import { signInWithGoogle } from '@/services/firebase/auth';
 import { user } from '@/store/user';
 
-import { Account } from './account';
-import { ThemeToggle } from './theme-toggle';
-import { Button } from './ui/button';
+export const Header = observer(function Header() {
+  const { isLoading, data } = user;
 
-/* eslint-disable mobx/missing-observer */
-export const Header = () => {
-  const showLoginBtn = !user.isLoading && !user.data?.profile;
-  const showAccountBtn = !user.isLoading && user.data?.profile;
+  const showLoginBtn = !isLoading && !data?.profile;
+  const showAccountBtn = !isLoading && data?.profile;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -23,7 +24,7 @@ export const Header = () => {
             <Button
               variant={'ghost'}
               size={'icon-lg'}
-              onClick={() => signInWithGoogle()}
+              onClick={signInWithGoogle}
             >
               <LogIn />
             </Button>
@@ -34,4 +35,4 @@ export const Header = () => {
       </div>
     </header>
   );
-};
+});

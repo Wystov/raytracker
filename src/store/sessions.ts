@@ -14,7 +14,7 @@ import {
   updateDoc,
   where,
 } from 'firebase/firestore';
-import { makeAutoObservable, observable } from 'mobx';
+import { action, makeAutoObservable, observable, runInAction } from 'mobx';
 
 import { getLampAndBulbTimeChange } from '@/lib/get-lamp-and-bulb-time-change';
 import { getListWithDates } from '@/lib/get-list-with-dates';
@@ -67,6 +67,15 @@ class Sessions {
     this.listData.push(session);
   }
 
+  setLastKey(key: QueryDocumentSnapshot<DocumentData>) {
+    this.lastKey = key;
+  }
+
+  setIsFetching(isFetching: boolean, type: 'list' | 'month') {
+    if (type === 'list') this.isFetching = isFetching;
+    if (type === 'month') this.isMonthDataFetching = isFetching;
+  }
+
   removeFromList(sessionId: string) {
     const date = this.listData.find((s) => s.id === sessionId)?.dateTime;
 
@@ -91,7 +100,7 @@ class Sessions {
       return;
     }
 
-    this.isFetching = true;
+    this.setIsFetching(true, 'list');
 
     const constraints: QueryConstraint[] = [
       orderBy('dateTime', 'desc'),
@@ -111,11 +120,11 @@ class Sessions {
         this.addToList(session.data() as SessionDataWithId)
       );
 
-      this.lastKey = res.docs[res.docs.length - 1];
+      this.setLastKey(res.docs[res.docs.length - 1]);
     } catch (error) {
       console.error(error);
     } finally {
-      this.isFetching = false;
+      this.setIsFetching(false, 'list');
     }
   }
 
@@ -139,7 +148,7 @@ class Sessions {
     );
 
     try {
-      this.isMonthDataFetching = true;
+      this.setIsFetching(true, 'month');
 
       const res = await getDocs(
         query(
@@ -160,16 +169,18 @@ class Sessions {
         };
       }) as NarrowedToDate<SessionDataWithId>[];
 
-      this.listByMonth.set(monthKey, data);
+      runInAction(() => {
+        this.listByMonth.set(monthKey, data);
 
-      for (const session of data) {
-        if (!this.listData.find((s) => s.id === session.id))
-          this.addToList(session);
-      }
+        for (const session of data) {
+          if (!this.listData.find((s) => s.id === session.id))
+            this.addToList(session);
+        }
+      });
     } catch (error) {
       console.error(error);
     } finally {
-      this.isMonthDataFetching = false;
+      this.setIsFetching(false, 'month');
     }
   }
 
@@ -201,12 +212,15 @@ class Sessions {
     this.addToList(sessionDataWithId);
 
     const monthKey = getYYYYMMKey(timestampToDate(sessionDataWithId.dateTime));
-    if (!this.listByMonth.has(monthKey)) {
-      this.listByMonth.set(monthKey, []);
-    }
-    this.listByMonth.get(monthKey)!.push({
-      ...sessionDataWithId,
-      dateTime: timestampToDate(sessionDataWithId.dateTime),
+
+    action(() => {
+      if (!this.listByMonth.has(monthKey)) {
+        this.listByMonth.set(monthKey, []);
+      }
+      this.listByMonth.get(monthKey)!.push({
+        ...sessionDataWithId,
+        dateTime: timestampToDate(sessionDataWithId.dateTime),
+      });
     });
 
     lamp.increaseSessionsCount();
@@ -250,7 +264,9 @@ class Sessions {
 
     lamp.decreaseSessionsCount();
 
-    lamp.decreaseTime(session.totalSessionTime, session.dateTime);
+    runInAction(() =>
+      lamp.decreaseTime(session.totalSessionTime, session.dateTime)
+    );
   }
 
   async editSession(data: SessionDataWithId) {
@@ -275,14 +291,19 @@ class Sessions {
 
     await updateDoc(dbRefs.sessionDoc(data.id), data);
 
-    const lampData = getLampAndBulbTimeChange(
-      oldSession.dateTime,
-      timeDiff,
-      lamp.bulbChangeDate
+    const lampData = runInAction(() =>
+      getLampAndBulbTimeChange(
+        oldSession.dateTime,
+        timeDiff,
+        lamp.bulbChangeDate
+      )
     );
 
     await updateDoc(dbRefs.lampDoc, lampData);
-    this.setList(this.listData.map((s) => (s.id === data.id ? data : s)));
+
+    runInAction(() => {
+      this.setList(this.listData.map((s) => (s.id === data.id ? data : s)));
+    });
 
     lamp.increaseTime(timeDiff, data.dateTime);
   }

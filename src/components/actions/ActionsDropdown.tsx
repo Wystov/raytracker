@@ -1,23 +1,25 @@
 /* eslint-disable mobx/missing-observer */
-import { AlertDialog } from '@radix-ui/react-alert-dialog';
 import { DropdownMenuArrow } from '@radix-ui/react-dropdown-menu';
 import { EllipsisVertical, Pencil, Trash2 } from 'lucide-react';
 
-import { lamp } from '@/store/lamp';
-import { sessions } from '@/store/sessions';
-
-import { LampDrawer, LampDrawerProps } from './lamp-drawer';
-import { RemoveWithConfirmation } from './remove-with-confirmation';
-import { SessionDrawer, SessionDrawerProps } from './session-drawer';
-import { AlertDialogTrigger } from './ui/alert-dialog';
-import { Button } from './ui/button';
-import { Drawer, DrawerTrigger } from './ui/drawer';
+import { RemoveWithConfirmation } from '@/components/actions/RemoveWithConfirmation';
+import { LampDrawer, LampDrawerProps } from '@/components/Lamp/LampDrawer';
+import {
+  SessionDrawer,
+  SessionDrawerProps,
+} from '@/components/Sessions/SessionDrawer';
+import { AlertDialog } from '@/components/ui/alert-dialog';
+import { AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
+import { Drawer, DrawerTrigger } from '@/components/ui/drawer';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from './ui/dropdown-menu';
+} from '@/components/ui/dropdown-menu';
+import { lamp } from '@/store/lamp';
+import { sessions } from '@/store/sessions';
 
 interface ActionsDropdownProps {
   type: 'lamp' | 'session';

@@ -1,7 +1,5 @@
 /* eslint-disable mobx/missing-observer */
 
-import { buttonVariants } from '@/components/ui/button';
-
 import {
   AlertDialogAction,
   AlertDialogCancel,
@@ -10,7 +8,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from './ui/alert-dialog';
+} from '@/components/ui/alert-dialog';
+import { buttonVariants } from '@/components/ui/button';
 
 interface RemoveWithConfirmationProps {
   text: string;
