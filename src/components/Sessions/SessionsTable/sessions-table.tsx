@@ -1,7 +1,6 @@
-import { observer } from 'mobx-react-lite';
-
+/* eslint-disable mobx/missing-observer */
 import { ActionsDropdown } from '@/components/actions-dropdown';
-import { Button } from '@/components/ui/button';
+import { SessionsLoadMoreWithCounter } from '@/components/Sessions/SessionsTable/SessionsLoadMoreWithCounter';
 import {
   Table,
   TableBody,
@@ -11,8 +10,6 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { toHumanReadableTime } from '@/lib/human-readable-time';
-import { lamp } from '@/store/lamp';
-import { sessions } from '@/store/sessions';
 import { NarrowedToDate, SessionDataWithId } from '@/types';
 
 interface SessionsTableProps {
@@ -20,10 +17,7 @@ interface SessionsTableProps {
   mode: 'latest' | 'calendar';
 }
 
-export const SessionsTable = observer(function SessionsTable({
-  data,
-  mode,
-}: SessionsTableProps) {
+export const SessionsTable = ({ data, mode }: SessionsTableProps) => {
   return (
     <>
       <Table>
@@ -76,20 +70,8 @@ export const SessionsTable = observer(function SessionsTable({
       </Table>
 
       {mode === 'latest' && (
-        <div className="flex flex-col gap-4 justify-between items-center mt-2">
-          <span className="text-sm font-medium text-muted-foreground">
-            Showing {data.length} of {lamp.sessionsCount}
-          </span>
-          {!sessions.isFetching && data.length < lamp.sessionsCount && (
-            <Button
-              variant={'outline'}
-              onClick={() => sessions.getSessions('more')}
-            >
-              Load more
-            </Button>
-          )}
-        </div>
+        <SessionsLoadMoreWithCounter dataLength={data.length} />
       )}
     </>
   );
-});
+};

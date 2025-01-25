@@ -12,14 +12,14 @@ export interface SessionDrawerProps {
 export const SessionDrawer = ({ type, id }: SessionDrawerProps) => {
   return (
     <>
-      <DrawerTrigger asChild>
-        {type === 'add' && (
+      {type === 'add' && (
+        <DrawerTrigger asChild>
           <Button className="self-start">
             <CalendarPlus />
             Add
           </Button>
-        )}
-      </DrawerTrigger>
+        </DrawerTrigger>
+      )}
       <DrawerContent>
         <SessionInputForm type={type} editSessionId={id} />
       </DrawerContent>

@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite';
 import { useEffect, useState } from 'react';
 
-import { SessionsTable } from '@/components/Sessions/sessions-table';
+import { SessionsTable } from '@/components/Sessions/SessionsTable/sessions-table';
 import { Calendar } from '@/components/ui/calendar';
 import { Loader } from '@/components/ui/loader';
 import { getYYYYMMKey } from '@/lib/get-YYYY-MM-key';

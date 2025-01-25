@@ -10,6 +10,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { sessions } from '@/store/sessions';
 
 export const Sessions = observer(function SessionsList() {
+  const { isFetching, list } = sessions;
+
   return (
     <Card className="w-full">
       <CardHeader className="flex flex-col gap-4">
@@ -19,24 +21,22 @@ export const Sessions = observer(function SessionsList() {
         </Drawer>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
-        {!sessions.isFetching && sessions.list.length === 0 && (
-          <p>No records</p>
-        )}
-        {sessions.list.length > 0 && (
+        {!isFetching && list.length === 0 && <p>No records</p>}
+        {list.length > 0 && (
           <Tabs defaultValue="latest">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="latest">Latest</TabsTrigger>
               <TabsTrigger value="Calendar">Calendar</TabsTrigger>
             </TabsList>
             <TabsContent value="latest">
-              <SessionsTable data={sessions.list} mode="latest" />
+              <SessionsTable data={list} mode="latest" />
             </TabsContent>
             <TabsContent value="Calendar">
               <SessionsCalendar />
             </TabsContent>
           </Tabs>
         )}
-        {sessions.isFetching && <Loader />}
+        {isFetching && <Loader />}
       </CardContent>
     </Card>
   );
