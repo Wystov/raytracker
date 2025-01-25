@@ -1,5 +1,5 @@
 /* eslint-disable mobx/missing-observer */
-import { ActionsDropdown } from '@/components/actions-dropdown';
+import { ActionsDropdown } from '@/components/actions/ActionsDropdown';
 import { SessionsLoadMoreWithCounter } from '@/components/Sessions/SessionsTable/SessionsLoadMoreWithCounter';
 import {
   Table,

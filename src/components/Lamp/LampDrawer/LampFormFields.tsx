@@ -10,7 +10,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { NumberInput } from '@/components/ui/number-input';
 
-import { LampFormSchemaType } from './lamp-drawer';
+import { LampFormSchemaType } from '.';
 
 type LampFormFieldsProps = {
   form: ReturnType<typeof useForm<LampFormSchemaType>>;

@@ -1,8 +1,8 @@
 import { LogIn } from 'lucide-react';
 import { observer } from 'mobx-react-lite';
 
-import { Account } from '@/components/account';
-import { ThemeToggle } from '@/components/theme-toggle';
+import { Account } from '@/components/Account';
+import { ThemeToggle } from '@/components/actions/ThemeToggle';
 import { Button } from '@/components/ui/button';
 import { signInWithGoogle } from '@/services/firebase/auth';
 import { user } from '@/store/user';

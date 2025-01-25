@@ -2,15 +2,12 @@
 import { DropdownMenuArrow } from '@radix-ui/react-dropdown-menu';
 import { EllipsisVertical, Pencil, Trash2 } from 'lucide-react';
 
-import {
-  LampDrawer,
-  LampDrawerProps,
-} from '@/components/Lamp/LampDrawer/lamp-drawer';
-import { RemoveWithConfirmation } from '@/components/remove-with-confirmation';
+import { RemoveWithConfirmation } from '@/components/actions/RemoveWithConfirmation';
+import { LampDrawer, LampDrawerProps } from '@/components/Lamp/LampDrawer';
 import {
   SessionDrawer,
   SessionDrawerProps,
-} from '@/components/Sessions/SessionDrawer/session-drawer';
+} from '@/components/Sessions/SessionDrawer';
 import { AlertDialog } from '@/components/ui/alert-dialog';
 import { AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';

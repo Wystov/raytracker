@@ -1,8 +1,8 @@
 import { observer } from 'mobx-react-lite';
 
-import { Lamp } from '@/components/Lamp/lamp';
-import { Login } from '@/components/login';
-import { Sessions } from '@/components/Sessions/sessions';
+import { Lamp } from '@/components/Lamp';
+import { Login } from '@/components/Login';
+import { Sessions } from '@/components/Sessions';
 import { Loader } from '@/components/ui/loader';
 import { lamp } from '@/store/lamp';
 import { user } from '@/store/user';

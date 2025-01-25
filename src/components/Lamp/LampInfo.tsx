@@ -6,7 +6,7 @@ import {
 import { ChevronDown, CircleHelp } from 'lucide-react';
 import { observer } from 'mobx-react-lite';
 
-import { ActionsDropdown } from '@/components/actions-dropdown';
+import { ActionsDropdown } from '@/components/actions/ActionsDropdown';
 import { Button } from '@/components/ui/button';
 import {
   Collapsible,

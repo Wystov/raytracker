@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { LampFormFields } from '@/components/Lamp/LampDrawer/lamp-form-fields';
+import { LampFormFields } from '@/components/Lamp/LampDrawer/LampFormFields';
 import { Button } from '@/components/ui/button';
 import {
   DrawerClose,

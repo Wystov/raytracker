@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite';
 
-import { LampInfo } from '@/components/Lamp/lamp-info';
-import { LampDrawer } from '@/components/Lamp/LampDrawer/lamp-drawer';
+import { LampDrawer } from '@/components/Lamp/LampDrawer';
+import { LampInfo } from '@/components/Lamp/LampInfo';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Drawer } from '@/components/ui/drawer';
 import { lamp } from '@/store/lamp';
