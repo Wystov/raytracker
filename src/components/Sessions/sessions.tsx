@@ -1,14 +1,13 @@
 import { observer } from 'mobx-react-lite';
 
+import { SessionDrawer } from '@/components/session-drawer';
+import { SessionsCalendar } from '@/components/sessions-calendar';
+import { SessionsTable } from '@/components/sessions-table';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Drawer } from '@/components/ui/drawer';
+import { Loader } from '@/components/ui/loader';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { sessions } from '@/store/sessions';
-
-import { SessionDrawer } from './session-drawer';
-import { SessionsCalendar } from './sessions-calendar';
-import { SessionsTable } from './sessions-table';
-import { Drawer } from './ui/drawer';
-import { Loader } from './ui/loader';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 
 export const Sessions = observer(function SessionsList() {
   return (

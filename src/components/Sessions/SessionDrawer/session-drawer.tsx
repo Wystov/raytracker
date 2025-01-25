@@ -1,9 +1,9 @@
 /* eslint-disable mobx/missing-observer */
 import { CalendarPlus } from 'lucide-react';
 
-import { SessionInputForm } from './session-input-form.tsx';
-import { Button } from './ui/button';
-import { DrawerContent, DrawerTrigger } from './ui/drawer';
+import { SessionInputForm } from '@/components/Sessions/SessionDrawer/session-input-form';
+import { Button } from '@/components/ui/button';
+import { DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
 
 export interface SessionDrawerProps {
   type: 'add' | 'edit';

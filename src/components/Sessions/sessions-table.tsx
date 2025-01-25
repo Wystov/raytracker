@@ -1,12 +1,7 @@
 import { observer } from 'mobx-react-lite';
 
-import { toHumanReadableTime } from '@/lib/human-readable-time';
-import { lamp } from '@/store/lamp';
-import { sessions } from '@/store/sessions';
-import { NarrowedToDate, SessionDataWithId } from '@/types';
-
-import { ActionsDropdown } from './actions-dropdown';
-import { Button } from './ui/button';
+import { ActionsDropdown } from '@/components/actions-dropdown';
+import { Button } from '@/components/ui/button';
 import {
   Table,
   TableBody,
@@ -14,7 +9,11 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from './ui/table';
+} from '@/components/ui/table';
+import { toHumanReadableTime } from '@/lib/human-readable-time';
+import { lamp } from '@/store/lamp';
+import { sessions } from '@/store/sessions';
+import { NarrowedToDate, SessionDataWithId } from '@/types';
 
 interface SessionsTableProps {
   data: NarrowedToDate<SessionDataWithId>[];
