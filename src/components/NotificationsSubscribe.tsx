@@ -1,31 +1,56 @@
 /* eslint-disable mobx/missing-observer */
+import { zodResolver } from '@hookform/resolvers/zod';
 import { runInAction } from 'mobx';
-import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
+import { Button } from '@/components/ui/button';
+import { DateTimePicker } from '@/components/ui/DateTimePicker';
+import { Form, FormField } from '@/components/ui/form';
 import { scheduleNotification, subscribeOneSignal } from '@/services/onesignal';
 import { user } from '@/store/user';
 
+const formSchema = z.object({
+  reminderDateTime: z.date(),
+});
+
+type FormSchemaType = z.infer<typeof formSchema>;
+
 export const NotificationsSubscribe = () => {
-  const [date, setDate] = useState('');
-  const [time, setTime] = useState('');
+  const form = useForm<FormSchemaType>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      reminderDateTime: new Date(),
+    },
+  });
 
   const onSubscribe = () => {
     subscribeOneSignal();
   };
 
-  const onShedule = () => {
+  const onSubmit = (data: FormSchemaType) => {
     const uid = runInAction(() => user.data?.profile.uid);
-
-    scheduleNotification(date, time, uid);
+    scheduleNotification(data.reminderDateTime, uid);
   };
 
   return (
-    <div>
-      <button onClick={onSubscribe}>Subscribe</button>
-
-      <input type="date" onChange={(e) => setDate(e.target.value)} />
-      <input type="time" onChange={(e) => setTime(e.target.value)} />
-      <button onClick={onShedule}>Schedule Reminder</button>
+    <div className="flex flex-col gap-4">
+      <p>Notifications</p>
+      <Button onClick={onSubscribe} className="self-start">
+        Subscribe to notifications
+      </Button>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <FormField
+            control={form.control}
+            name="reminderDateTime"
+            render={({ field }) => <DateTimePicker field={field} />}
+          />
+          <Button type="submit" className="my-4">
+            Remind me
+          </Button>
+        </form>
+      </Form>
     </div>
   );
 };

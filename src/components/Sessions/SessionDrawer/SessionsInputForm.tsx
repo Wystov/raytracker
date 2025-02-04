@@ -1,12 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { format } from 'date-fns';
-import { Calendar as CalendarIcon } from 'lucide-react';
+import { runInAction } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
+import { DateTimePicker } from '@/components/ui/DateTimePicker';
 import {
   DrawerClose,
   DrawerDescription,
@@ -22,21 +21,20 @@ import {
   FormLabel,
 } from '@/components/ui/form';
 import { NumberInput } from '@/components/ui/number-input';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
+import { Switch } from '@/components/ui/switch';
 import { TimePicker } from '@/components/ui/time-picker';
 import { toHumanReadableTime } from '@/lib/human-readable-time';
-import { cn } from '@/lib/utils';
+import { scheduleNotification } from '@/services/onesignal';
 import { sessions } from '@/store/sessions';
+import { user } from '@/store/user';
 import { SessionDataWithId } from '@/types';
 
 const formSchema = z.object({
   dateTime: z.date(),
   duration: z.date(),
   uses: z.number().int().positive(),
+  scheduleReminder: z.boolean().optional(),
+  reminderDateTime: z.date().optional(),
 });
 
 type FormSchemaType = z.infer<typeof formSchema>;
@@ -66,10 +64,13 @@ export const SessionInputForm = observer(function SessionInputForm({
       dateTime: date,
       duration: new Date(new Date().setHours(0, 0, defaultUseDuration, 0)),
       uses: defaultUses,
+      scheduleReminder: false,
+      reminderDateTime: date,
     },
   });
 
   const [duration, uses] = form.watch(['duration', 'uses']);
+  const scheduleReminder = form.watch('scheduleReminder');
 
   const getTotalSessionTime = (duration: Date, uses: number) => {
     const minutes = duration.getMinutes();
@@ -84,7 +85,7 @@ export const SessionInputForm = observer(function SessionInputForm({
     uses
   );
 
-  function onSubmit(data: FormSchemaType) {
+  const onSubmit = (data: FormSchemaType) => {
     const formattedData: SessionDataWithId = {
       dateTime: data.dateTime,
       uses: data.uses,
@@ -94,6 +95,11 @@ export const SessionInputForm = observer(function SessionInputForm({
     };
     if (type === 'add') {
       sessions.addSession(formattedData);
+
+      if (scheduleReminder && data.reminderDateTime) {
+        const uid = runInAction(() => user.data?.profile.uid);
+        scheduleNotification(data.reminderDateTime, uid);
+      }
       return;
     }
 
@@ -104,7 +110,7 @@ export const SessionInputForm = observer(function SessionInputForm({
 
     formattedData.id = editSessionId;
     sessions.editSession(formattedData);
-  }
+  };
 
   return (
     <div className="mx-auto w-full max-w-sm">
@@ -124,62 +130,7 @@ export const SessionInputForm = observer(function SessionInputForm({
           <FormField
             control={form.control}
             name="dateTime"
-            render={({ field }) => (
-              <FormItem className="flex flex-col px-4">
-                <FormLabel className="text-left">Date and time</FormLabel>
-                <div className="flex items-center gap-2">
-                  <CalendarIcon className="h-5 w-5" />
-                  <Popover>
-                    <FormControl>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className={cn(
-                            'w-[280px] justify-start text-left font-normal',
-                            !field.value && 'text-muted-foreground'
-                          )}
-                        >
-                          {field.value ? (
-                            format(field.value, 'PPP')
-                          ) : (
-                            <span>Pick a date</span>
-                          )}
-                        </Button>
-                      </PopoverTrigger>
-                    </FormControl>
-                    <PopoverContent className="w-auto p-0">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={(e) => {
-                          if (!e) {
-                            console.error('No selected date');
-                            return;
-                          }
-                          const currentDateTime = field.value ?? new Date();
-
-                          const hours = currentDateTime.getHours();
-                          const minutes = currentDateTime.getMinutes();
-                          const seconds = currentDateTime.getSeconds();
-
-                          const newDate = new Date(e);
-                          newDate.setHours(hours, minutes, seconds, 0);
-
-                          field.onChange(newDate);
-                        }}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </div>
-                <TimePicker
-                  type="hhmm"
-                  setDate={field.onChange}
-                  date={field.value}
-                  hasIcon
-                />
-              </FormItem>
-            )}
+            render={({ field }) => <DateTimePicker field={field} />}
           />
           <div className="flex">
             <FormField
@@ -219,6 +170,30 @@ export const SessionInputForm = observer(function SessionInputForm({
             <span className="font-medium">Total session time:</span>{' '}
             {toHumanReadableTime(totalSessionTime)}
           </p>
+          {type === 'add' && (
+            <FormField
+              control={form.control}
+              name="scheduleReminder"
+              render={({ field }) => (
+                <FormItem className="flex justify-start items-center gap-2 px-4">
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormLabel className="!mt-0">Schedule reminder</FormLabel>
+                </FormItem>
+              )}
+            />
+          )}
+          {scheduleReminder && (
+            <FormField
+              control={form.control}
+              name="reminderDateTime"
+              render={({ field }) => <DateTimePicker field={field} />}
+            />
+          )}
           <DrawerFooter className="flex-row gap-2 py-0 mb-12">
             <DrawerClose asChild>
               <Button variant={'outline'} className="flex-1">

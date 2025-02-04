@@ -41,11 +41,8 @@ export const logoutOneSignal = async () => {
   }
 };
 
-export const scheduleNotification = async (
-  date: string,
-  time: string,
-  userId?: string
-) => {
+export const scheduleNotification = async (dateTime: Date, userId?: string) => {
+  console.log(dateTime);
   if (!userId) {
     console.error(
       "Can't get user ID. Skipping OneSignal notification scheduling."
@@ -54,7 +51,7 @@ export const scheduleNotification = async (
   }
 
   try {
-    const scheduledDateTime = new Date(`${date} ${time}`).toString();
+    const scheduledDateTime = dateTime.toString();
     if (isNaN(new Date(scheduledDateTime).getTime())) {
       console.error('Invalid date or time.');
       return;
@@ -84,3 +81,5 @@ export const scheduleNotification = async (
     console.error('Error scheduling notification:', error);
   }
 };
+
+export const isNotificationsEnabled = () => OneSignal.Notifications.permission;
