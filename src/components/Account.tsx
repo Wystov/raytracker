@@ -1,6 +1,7 @@
 import { User } from 'lucide-react';
 import { observer } from 'mobx-react-lite';
 
+import { NotificationsSubscribe } from '@/components/NotificationsSubscribe';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -29,6 +30,10 @@ export const Account = observer(function Account() {
         <SheetDescription />
         <div className="flex flex-col items-start gap-2 py-4">
           <div>User: {user.data?.profile.displayName}</div>
+        </div>
+        <div>
+          <p>Notifications</p>
+          <NotificationsSubscribe />
         </div>
         <SheetFooter className="items-start">
           <Button variant={'outline'} onClick={signOutUser}>

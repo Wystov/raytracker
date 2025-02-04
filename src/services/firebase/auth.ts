@@ -7,6 +7,7 @@ import {
 } from 'firebase/auth';
 import { runInAction } from 'mobx';
 
+import { loginOneSignal, logoutOneSignal } from '@/services/onesignal';
 import { lamp } from '@/store/lamp';
 import { sessions } from '@/store/sessions';
 import { user } from '@/store/user';
@@ -40,12 +41,14 @@ onAuthStateChanged(auth, async (data) => {
       setDbRefs({ reset: true });
       lamp.reset();
       sessions.reset();
+      logoutOneSignal();
       return;
     }
 
     setDbRefs({ uid: data.uid, lampId: runInAction(() => user.lampId) });
     await lamp.getLamp();
-    sessions.getSessions();
+    await sessions.getSessions();
+    loginOneSignal(data.uid);
   } catch (error) {
     console.error(error);
   } finally {

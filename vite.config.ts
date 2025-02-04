@@ -5,6 +5,10 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: './',
+  preview: {
+    port: 5173,
+  },
   plugins: [
     react(),
     VitePWA({
