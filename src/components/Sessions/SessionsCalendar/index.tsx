@@ -54,7 +54,7 @@ export const SessionsCalendar = observer(function SessionsCalendar() {
           modifiersClassNames={{
             datesWithSessions: 'bg-primary text-primary-foreground rounded-md',
           }}
-          className="rounded-xl border shadow"
+          className="rounded-xl border shadow-sm"
         />
       </div>
       {!selectedDate && (

@@ -2,6 +2,7 @@
 import { ThemeProvider } from '@/components/actions/ThemeProvider';
 import { Header } from '@/components/Header';
 import { MainContent } from '@/components/MainContent';
+import { Loader } from '@/components/ui/loader';
 
 export const App = () => {
   return (
@@ -13,6 +14,7 @@ export const App = () => {
       >
         <MainContent />
       </main>
+      <Loader />
     </ThemeProvider>
   );
 };
