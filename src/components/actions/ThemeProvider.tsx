@@ -63,7 +63,13 @@ export function ThemeProvider({
   return (
     <ThemeProviderContext.Provider {...props} value={value}>
       {children}
-      <Toaster theme={theme} position="top-center" expand visibleToasts={5} />
+      <Toaster
+        theme={theme}
+        richColors
+        position="top-center"
+        expand
+        visibleToasts={5}
+      />
     </ThemeProviderContext.Provider>
   );
 }
