@@ -1,4 +1,5 @@
 import OneSignal from 'react-onesignal';
+import { toast } from 'sonner';
 
 export const initOneSignal = async () => {
   try {
@@ -42,7 +43,6 @@ export const logoutOneSignal = async () => {
 };
 
 export const scheduleNotification = async (dateTime: Date, userId?: string) => {
-  console.log(dateTime);
   if (!userId) {
     console.error(
       "Can't get user ID. Skipping OneSignal notification scheduling."
@@ -77,8 +77,10 @@ export const scheduleNotification = async (dateTime: Date, userId?: string) => {
     const result = await response.json();
 
     if (!result.id) throw new Error('No result id in response');
+    toast.success('Reminder scheduled successfully');
   } catch (error) {
     console.error('Error scheduling notification:', error);
+    toast.error('Failed to schedule reminder');
   }
 };
 

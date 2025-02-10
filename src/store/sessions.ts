@@ -15,6 +15,7 @@ import {
   where,
 } from 'firebase/firestore';
 import { action, makeAutoObservable, observable, runInAction } from 'mobx';
+import { toast } from 'sonner';
 
 import { getLampAndBulbTimeChange } from '@/lib/get-lamp-and-bulb-time-change';
 import { getListWithDates } from '@/lib/get-list-with-dates';
@@ -209,6 +210,7 @@ class Sessions {
       sessionsCount: increment(1),
     });
 
+    toast.success('Session added');
     this.addToList(sessionDataWithId);
 
     const monthKey = getYYYYMMKey(timestampToDate(sessionDataWithId.dateTime));
@@ -262,6 +264,8 @@ class Sessions {
       sessionsCount: increment(-1),
     });
 
+    toast.success('Session deleted');
+
     lamp.decreaseSessionsCount();
 
     runInAction(() =>
@@ -301,6 +305,7 @@ class Sessions {
 
     await updateDoc(dbRefs.lampDoc, lampData);
 
+    toast.success('Session edited');
     runInAction(() => {
       this.setList(this.listData.map((s) => (s.id === data.id ? data : s)));
     });
