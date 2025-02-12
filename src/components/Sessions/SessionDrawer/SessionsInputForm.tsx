@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { add } from 'date-fns';
 import { runInAction } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import { useForm } from 'react-hook-form';
@@ -23,6 +24,7 @@ import {
 import { NumberInput } from '@/components/ui/number-input';
 import { Switch } from '@/components/ui/switch';
 import { TimePicker } from '@/components/ui/time-picker';
+import { REMINDER_DEFAULT_OFFSET_DAYS } from '@/constants';
 import { toHumanReadableTime } from '@/lib/human-readable-time';
 import { scheduleNotification } from '@/services/onesignal';
 import { sessions } from '@/store/sessions';
@@ -65,7 +67,7 @@ export const SessionInputForm = observer(function SessionInputForm({
       duration: new Date(new Date().setHours(0, 0, defaultUseDuration, 0)),
       uses: defaultUses,
       scheduleReminder: false,
-      reminderDateTime: date,
+      reminderDateTime: add(new Date(), { days: REMINDER_DEFAULT_OFFSET_DAYS }),
     },
   });
 
