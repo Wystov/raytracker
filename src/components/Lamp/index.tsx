@@ -16,7 +16,7 @@ export const Lamp = observer(function Lamp() {
         {lamp.exists ? (
           <LampInfo />
         ) : (
-          <Drawer>
+          <Drawer repositionInputs={false}>
             <LampDrawer type="add" />
           </Drawer>
         )}

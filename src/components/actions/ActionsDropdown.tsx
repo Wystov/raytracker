@@ -48,7 +48,7 @@ export const ActionsDropdown = ({ id, type }: ActionsDropdownProps) => {
 
   return (
     <AlertDialog>
-      <Drawer>
+      <Drawer repositionInputs={false}>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon">
