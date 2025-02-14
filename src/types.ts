@@ -20,6 +20,7 @@ export type SessionData = {
   timeInSeconds: number;
   totalSessionTime: number;
   uses: number;
+  isReminderNeeded?: boolean;
 };
 
 export type SessionDataWithId = SessionData & {

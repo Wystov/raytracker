@@ -66,7 +66,7 @@ export const SessionInputForm = observer(function SessionInputForm({
       dateTime: date,
       duration: new Date(new Date().setHours(0, 0, defaultUseDuration, 0)),
       uses: defaultUses,
-      scheduleReminder: localStorage.getItem('raytracker-schedule') === 'true',
+      scheduleReminder: session?.isReminderNeeded ?? false,
       reminderDateTime: add(new Date(), { days: REMINDER_DEFAULT_OFFSET_DAYS }),
     },
   });
@@ -94,6 +94,7 @@ export const SessionInputForm = observer(function SessionInputForm({
       timeInSeconds,
       totalSessionTime,
       id: '',
+      isReminderNeeded: data.scheduleReminder,
     };
     if (type === 'add') {
       sessions.addSession(formattedData);
@@ -182,12 +183,6 @@ export const SessionInputForm = observer(function SessionInputForm({
                     <Switch
                       checked={field.value}
                       onCheckedChange={field.onChange}
-                      onClick={() => {
-                        localStorage.setItem(
-                          'raytracker-schedule',
-                          `${!field.value}`
-                        );
-                      }}
                     />
                   </FormControl>
                   <FormLabel className="mt-0!">Schedule reminder</FormLabel>
