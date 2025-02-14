@@ -183,6 +183,7 @@ export const SessionInputForm = observer(function SessionInputForm({
                     <Switch
                       checked={field.value}
                       onCheckedChange={field.onChange}
+                      className="m-0"
                     />
                   </FormControl>
                   <FormLabel className="mt-0!">Schedule reminder</FormLabel>
