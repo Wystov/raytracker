@@ -52,7 +52,8 @@ export const SessionsCalendar = observer(function SessionsCalendar() {
           onSelect={setSelectedDate}
           onMonthChange={onMonthChange}
           modifiersClassNames={{
-            datesWithSessions: 'bg-primary text-primary-foreground rounded-md',
+            datesWithSessions:
+              '[&>button]:bg-primary [&>button]:text-primary-foreground rounded-md',
           }}
           className="rounded-xl border shadow-sm"
         />
