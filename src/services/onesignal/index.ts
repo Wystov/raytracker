@@ -14,11 +14,7 @@ export const initOneSignal = async () => {
 };
 
 export const subscribeOneSignal = async () => {
-  try {
-    await OneSignal.Notifications.requestPermission();
-  } catch (error) {
-    console.error('Error subscribing to OneSignal: ', error);
-  }
+  await OneSignal.Notifications.requestPermission();
 };
 
 export const loginOneSignal = async (userId?: string) => {
@@ -84,4 +80,8 @@ export const scheduleNotification = async (dateTime: Date, userId?: string) => {
   }
 };
 
-export const isNotificationsEnabled = () => OneSignal.Notifications.permission;
+export const isPushEnabled = () => OneSignal.Notifications.permission;
+
+export const isPushSupported = () => OneSignal.Notifications.isPushSupported();
+
+export const isSubscribed = () => OneSignal.User.PushSubscription.optedIn;

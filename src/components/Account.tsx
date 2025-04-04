@@ -3,6 +3,7 @@ import { observer } from 'mobx-react-lite';
 
 import { NotificationsSubscribe } from '@/components/NotificationsSubscribe';
 import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 import {
   Sheet,
   SheetContent,
@@ -30,8 +31,10 @@ export const Account = observer(function Account() {
         <SheetDescription />
         <div className="flex flex-col items-start gap-2 py-4">
           <div>User: {user.data?.profile.displayName}</div>
+          <Separator />
+          <NotificationsSubscribe />
+          <Separator />
         </div>
-        <NotificationsSubscribe />
         <SheetFooter className="items-start">
           <Button variant={'outline'} onClick={signOutUser}>
             Sign out

@@ -15,12 +15,13 @@ import { cn } from '@/lib/utils';
 
 type DateTimePickerProps = {
   field: FieldValues;
+  className?: string;
 };
 
 /* eslint-disable mobx/missing-observer */
-export const DateTimePicker = ({ field }: DateTimePickerProps) => {
+export const DateTimePicker = ({ field, className }: DateTimePickerProps) => {
   return (
-    <FormItem className="flex flex-col px-4">
+    <FormItem className={`flex flex-col px-4 ${className}`}>
       <FormLabel className="text-left">Date and time</FormLabel>
       <div className="flex items-center gap-2">
         <CalendarIcon className="h-5 w-5" />
