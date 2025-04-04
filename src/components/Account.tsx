@@ -1,7 +1,8 @@
 import { User } from 'lucide-react';
 import { observer } from 'mobx-react-lite';
 
-import { NotificationsSubscribe } from '@/components/NotificationsSubscribe';
+import { NotificationController } from '@/components/NotificationController';
+import { NotificationForm } from '@/components/NotificationForm';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import {
@@ -32,7 +33,9 @@ export const Account = observer(function Account() {
         <div className="flex flex-col items-start gap-2 py-4">
           <div>User: {user.data?.profile.displayName}</div>
           <Separator />
-          <NotificationsSubscribe />
+          <NotificationController>
+            <NotificationForm />
+          </NotificationController>
           <Separator />
         </div>
         <SheetFooter className="items-start">

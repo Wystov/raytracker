@@ -5,6 +5,7 @@ import { observer } from 'mobx-react-lite';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { NotificationController } from '@/components/NotificationController';
 import { Button } from '@/components/ui/button';
 import { DateTimePicker } from '@/components/ui/DateTimePicker';
 import {
@@ -192,11 +193,13 @@ export const SessionInputForm = observer(function SessionInputForm({
             />
           )}
           {scheduleReminder && (
-            <FormField
-              control={form.control}
-              name="reminderDateTime"
-              render={({ field }) => <DateTimePicker field={field} />}
-            />
+            <NotificationController>
+              <FormField
+                control={form.control}
+                name="reminderDateTime"
+                render={({ field }) => <DateTimePicker field={field} />}
+              />
+            </NotificationController>
           )}
           <DrawerFooter className="flex-row gap-2 py-0 mb-12">
             <DrawerClose asChild>
