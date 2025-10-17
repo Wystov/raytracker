@@ -17,7 +17,7 @@ export const Sessions = observer(function SessionsList() {
       <CardHeader className="flex flex-col gap-4">
         <CardTitle>Sessions</CardTitle>
         <Drawer repositionInputs={false}>
-          <SessionDrawer type="add" />
+          <SessionDrawer type="add" text="Add" />
         </Drawer>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">

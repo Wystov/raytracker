@@ -7,16 +7,20 @@ import { DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
 
 export interface SessionDrawerProps {
   type: 'add' | 'edit';
+  text?: string;
   id?: string;
 }
-export const SessionDrawer = ({ type, id }: SessionDrawerProps) => {
+export const SessionDrawer = ({ type, id, text }: SessionDrawerProps) => {
   return (
     <>
       {type === 'add' && (
         <DrawerTrigger asChild>
-          <Button className="self-start">
+          <Button
+            className={`self-start ${!text ? 'rounded-full' : ''}`}
+            {...(text ? {} : { size: 'icon' })}
+          >
             <CalendarPlus />
-            Add
+            {text ?? ''}
           </Button>
         </DrawerTrigger>
       )}
