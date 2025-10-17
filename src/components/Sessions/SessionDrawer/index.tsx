@@ -16,8 +16,8 @@ export const SessionDrawer = ({ type, id, text }: SessionDrawerProps) => {
       {type === 'add' && (
         <DrawerTrigger asChild>
           <Button
-            className={`self-start ${!text ? 'rounded-full' : ''}`}
-            {...(text ? {} : { size: 'icon' })}
+            className={`self-start ${!text ? 'rounded-full p-6' : ''}`}
+            {...(text ? {} : { size: 'icon-lg' })}
           >
             <CalendarPlus />
             {text ?? ''}
